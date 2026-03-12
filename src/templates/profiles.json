@@ -1,0 +1,9 @@
+{
+    "profiles": [
+        {
+            "id": "123456",
+            "username": "username",
+            "fullname": "fullname"
+        }
+    ]
+}
