@@ -2,7 +2,7 @@
 #define PROFILEWINDOW_H
 
 #include <QDialog>
-#include "../core/manager.h"
+#include "profilechecker.h"
 
 namespace Ui {
 class ProfileWindow;
@@ -16,6 +16,8 @@ public:
     explicit ProfileWindow(Manager *managerRef, QWidget *parent = nullptr);
     ~ProfileWindow();
     
+    void closeEvent(QCloseEvent *event) override;
+
     void pw_show();
 
 private slots:
@@ -27,9 +29,13 @@ private slots:
 
     void on_PW_BTN_DEL_clicked();
 
+signals:
+    void signal_updateProfileList(const QList<Instagram::userData> &profilesEdit);
+
 private:
     Ui::ProfileWindow *ui;
     Manager *manager;
+    ProfileChecker *profileChecker;
 
     QList<Instagram::userData> profiles;
     QList<Instagram::userData> profilesEdit;
@@ -37,6 +43,7 @@ private:
     void Init();
     void pw_setData();
     void pw_updateList();
+    void pw_checkDataChanged();
 
     bool dataChanged = false;
 

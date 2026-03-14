@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ProfileChecker</class>
+ <widget class="QDialog" name="ProfileChecker">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog {
+	background-color: #111111;
+	color: white;
+}
+
+QLabel {
+	color: white;
+}
+
+QPushButton {
+    background-color: #25292e;
+    color: white;
+    border-radius: 5px;
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: #2f3338;
+}
+
+QPushButton:pressed {
+    background-color: #1c1f23;
+}
+
+QTextEdit, QLineEdit {
+	background-color: #363636;
+	color: #a8a8a8;
+	border: 1px solid #7a7a7a;
+}</string>
+  </property>
+  <widget class="QLineEdit" name="LN_INPT_ID">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>40</y>
+     <width>201</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>User ID</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="LN_INPT_USER">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>201</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>Username (without @), e.g. lalalalisa_m</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BTN_CHECK_ID">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>40</y>
+     <width>80</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BTN_CHECK_USER">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>80</y>
+     <width>80</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="LBL_FND">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>40</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(16, 252, 0);</string>
+   </property>
+   <property name="text">
+    <string>Found!</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="LBL_NFND">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>20</y>
+     <width>161</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Not found! Please make sure that the user exists and the profile is public</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="LN_OUTP_ID">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>190</y>
+     <width>201</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="placeholderText">
+    <string>User ID</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="LN_OUTP_USER">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>230</y>
+     <width>201</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="placeholderText">
+    <string>Username</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="LBL_USER_PFP">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>170</y>
+     <width>150</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 75px;
+border: 2px solid #0c0c0c;
+background-color: lightgray; 
+background-position: center;
+background-repeat: no-repeat;
+background-image: url(:/images/lisa.jpg);
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="LN_OUTP_NAME">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>270</y>
+     <width>201</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="placeholderText">
+    <string>Fullname</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>140</y>
+     <width>450</width>
+     <height>3</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">Line {
+	background-color: #363636;
+	color: #363636;
+}</string>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Orientation::Horizontal</enum>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

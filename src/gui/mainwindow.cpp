@@ -120,13 +120,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             QMouseEvent *me = static_cast<QMouseEvent*>(event);
             if (me->button() == Qt::LeftButton) {
                 m_isDragging = true;
-                m_dragStartPosition = me->globalPos() - frameGeometry().topLeft();
+                m_dragStartPosition = me->globalPosition().toPoint() - frameGeometry().topLeft();
                 return true;
             }
         } else if (event->type() == QEvent::MouseMove) {
             QMouseEvent *me = static_cast<QMouseEvent*>(event);
             if (m_isDragging && (me->buttons() & Qt::LeftButton)) {
-                move(me->globalPos() - m_dragStartPosition);
+                move(me->globalPosition().toPoint() - m_dragStartPosition);
                 return true;
             }
         } else if (event->type() == QEvent::MouseButtonRelease) {
@@ -157,6 +157,10 @@ void MainWindow::Init()
     });
 
     connect(settingswindow, &Settingswindow::signal_updateTextMainWindow, this, &MainWindow::updateGeneratedText);
+
+    connect(profilewindow, &ProfileWindow::signal_updateProfileList, this, [this](const QList<Instagram::userData> profileEdit) {
+        setProfileCombobox(profileEdit);
+    });
 
     connect(INST_MDCT_PFP, &ClickableLabel::clicked, this, &MainWindow::openPfpViewer);
 

@@ -17,6 +17,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         resources/resources.qrc
         ${app_icon_resource_windows}
         dialogs/profilewindow.h dialogs/profilewindow.cpp dialogs/profilewindow.ui
+        dialogs/profilechecker.h dialogs/profilechecker.cpp dialogs/profilechecker.ui
 
     )
 else()

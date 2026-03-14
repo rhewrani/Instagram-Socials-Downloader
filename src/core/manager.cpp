@@ -46,15 +46,17 @@ QString Manager::t(const QString &key)
     return translate(key, settings.intLanguage);
 }
 
-bool Manager::saveProfiles(QList<Instagram::userData> profiles)
+bool Manager::saveProfiles(QList<Instagram::userData> profilesEdit)
 {
+    profiles = profilesEdit;
+    
     QFile file("profiles.json");
 
     QJsonDocument doc = fileAgent->File_GetDataDocument(file);
     QJsonObject root = doc.object();
 
     QJsonArray profilesArray;
-    for (const auto &userData : profiles) {
+    for (const auto &userData : profilesEdit) {
         QJsonObject profileObj;
         profileObj["id"] = userData.id;
         profileObj["username"] = userData.username;
