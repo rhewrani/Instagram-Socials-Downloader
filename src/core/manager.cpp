@@ -1,4 +1,5 @@
 #include "../gui/mainwindow.h"
+#include "instagram.h"
 #include <qdebug.h>
 #include <qjsonobject.h>
 
@@ -48,6 +49,8 @@ QString Manager::t(const QString &key)
 
 bool Manager::saveProfiles(QList<Instagram::userData> profilesEdit)
 {
+    qDebug() << "Saving profiles";
+
     profiles = profilesEdit;
     
     QFile file("profiles.json");
@@ -71,10 +74,19 @@ bool Manager::saveProfiles(QList<Instagram::userData> profilesEdit)
     return true;
 }
 
+Instagram::userData* Manager::getProfilePtrFromName(const QString &username)
+{
+    for (auto &profile : profiles) {
+        if (profile.username == username) {
+            return &profile;
+        }
+    }
+    return nullptr;
+}
+
 bool Manager::saveSettings(appSettings settingsStruct, bool restart)
 {
     if (!restart) {
-        // if restart is not required, I can directly updated the program settings variables. If restart is required, I don't need to do the stress of updating the program variables anyways.
         // Only non-restart required settings here
         settings.presets = settingsStruct.presets;
         settings.bEnableLogging = settingsStruct.bEnableLogging;
@@ -275,17 +287,17 @@ void Manager::generateCopyPasteTextString(const QString &templateText, QTextEdit
 
 
 
-void Manager::instagram_GET_userInfo(int user)
+void Manager::instagram_GET_userInfo(const QString &username, bool isProfileChecker) // by name
 {
-    instagram->GET_userInfo(instagram->getUserPtr(user));
+    instagram->GET_userInfo(getProfilePtrFromName(username), isProfileChecker);
 }
 
-void Manager::instagram_GET_userFeed(int user)
+void Manager::instagram_GET_userFeed(const QString &username)
 {
-    instagram->GET_userFeed(instagram->getUserPtr(user));
+    instagram->GET_userFeed(getProfilePtrFromName(username));
 }
 
-void Manager::instagram_GET_PostFromShortcode(QString &shortcode)
+void Manager::instagram_GET_PostFromShortcode(const QString &shortcode)
 {
     if (m_postCache.contains(shortcode)) {
 
@@ -311,15 +323,15 @@ void Manager::Init()
     GetSettings();
     GetProfiles();
     InitInstagram();
+    mainWindow->setProfileCombobox(profiles, false);
 }
 
 void Manager::InitInstagram()
 {
-    instagram = new Instagram(fileAgent, networkManager, settings.intLanguage, settings.strSessionid);
-    lisaStruct = instagram->getUserPtr(0);
-    lloudStruct = instagram->getUserPtr(1);
-    lfamilyStruct = instagram->getUserPtr(2);
-    currentUser = lisaStruct;
+    if (!profiles.isEmpty()) {
+        currentUser = &profiles[0];
+    }
+    instagram = new Instagram(fileAgent, networkManager, settings.intLanguage, settings.strSessionid, currentUser);
     connect(instagram, &Instagram::signal_updateMainPageProfileInfo, mainWindow, &MainWindow::updateProfileInfoUI);
     connect(instagram, &Instagram::signal_updateMainPageProfileFeed, mainWindow, &MainWindow::updateProfileFeedUI);
     connect(instagram, &Instagram::signal_fetchFailed, mainWindow, &MainWindow::resetPreviewWidget);
@@ -390,8 +402,6 @@ void Manager::GetProfiles()
         }
     }
     profiles = loadedProfiles;
-
-    mainWindow->setProfileCombobox(profiles);
 }
 
 

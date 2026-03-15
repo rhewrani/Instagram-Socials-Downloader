@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Profiles</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QDialog {
@@ -49,103 +49,125 @@ QListView::item {
 	padding: 12px;
 }</string>
   </property>
-  <widget class="QLabel" name="PW_TTL">
+  <widget class="QWidget" name="profilewidget" native="true">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>30</y>
-     <width>111</width>
-     <height>31</height>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>630</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>15</pointsize>
-    </font>
+   <property name="minimumSize">
+    <size>
+     <width>400</width>
+     <height>630</height>
+    </size>
    </property>
-   <property name="text">
-    <string>Profile List</string>
+   <property name="maximumSize">
+    <size>
+     <width>400</width>
+     <height>630</height>
+    </size>
    </property>
-  </widget>
-  <widget class="QPushButton" name="PW_BTN_ADD">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>50</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>+</string>
-   </property>
-  </widget>
-  <widget class="QListWidget" name="PW_LIST">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>100</y>
-     <width>321</width>
-     <height>481</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="PW_BTN_DEL">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>50</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>-</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="PW_TTL_2">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>590</y>
-     <width>271</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>First Item will get loaded first on startup</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="PW_BTN_UP">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>50</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>UP</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="PW_BTN_DOWN">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>50</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>DOWN</string>
-   </property>
+   <widget class="QPushButton" name="PW_BTN_DOWN">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>30</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DOWN</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PW_BTN_ADD">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>30</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>+</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PW_TTL_2">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>570</y>
+      <width>271</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>First Item will get loaded first on startup</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PW_TTL">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>10</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Profile List</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PW_BTN_UP">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>UP</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="PW_LIST">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>80</y>
+      <width>321</width>
+      <height>481</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PW_BTN_DEL">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>30</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>-</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

@@ -55,6 +55,7 @@ public:
     void GetProfiles();
     QList<Instagram::userData>& getProfiles() { return profiles; }
     bool saveProfiles(QList<Instagram::userData> profiles);
+    Instagram::userData* getProfilePtrFromName(const QString &username);
 
     bool saveMedia(const QPixmap &pixmap, const QString &path);
     bool saveMediaVideo(const QString &videoUrl, const QString &path);
@@ -65,47 +66,55 @@ public:
     void generateCopyPasteText(const QString &presetKey, QTextEdit *target, const QMap<QString, QString> &params);
     void generateCopyPasteTextString(const QString &templateText, QTextEdit *target, const QMap<QString, QString> &params, bool enableQuoting = true);
 
-    /* INSTAGRAM LOGIC */
-    void instagram_setCurrentSelectedUser(int user) { instagram_currentSelectedInstagramUser = user; currentUser = instagram->getUserPtr(instagram_currentSelectedInstagramUser);}
-    int instagram_getCurrentSelectedUser() { return instagram_currentSelectedInstagramUser; }
-    Instagram::userData* instagram_getCurrentUserData() { return instagram->getUserPtr(instagram_currentSelectedInstagramUser); }
+    Instagram* getInstagram() { return instagram; }
 
-    void instagram_GET_userInfo(int user);
-    void instagram_GET_userFeed(int user);
-    void instagram_GET_PostFromShortcode(QString &shortcode);
+    /* INSTAGRAM LOGIC */
+    /* CURRENT SELECTED USER */
+    void instagram_setCurrentSelectedUserIndex(int index) {
+        instagram_currentSelectedProfileIndex = index;
+        if (index >= 0 && index < profiles.size()) {
+            currentUser = &profiles[index];
+        }
+    }
+    Instagram::userData* instagram_getCurrentSelectedUser() { return currentUser; }
+    int instagram_getCurrentSelectedUserIndex() { return instagram_currentSelectedProfileIndex; }
+    
+    void instagram_GET_userInfo(const QString &username, bool isProfileChecker = false);
+    void instagram_GET_userFeed(const QString &username);
+    void instagram_GET_PostFromShortcode(const QString &shortcode);
     void instagram_GET_Story(const QString &username, bool isAutoFetch = true); // Autofetch is true at program init and when switching + refreshing the user info. This basically tells the program to not instantly display the story when fetched
 
-    Instagram::userData *currentUser = nullptr;
-
+    
     QHash<QString, QPixmap> m_imageCache;
     QHash<QString, Instagram::contentNode> m_postCache;
     QHash<QString, Instagram::contentNode> m_storyCache;
-
+    
     QList<Instagram::userData> profiles;
-
+    
     int lastApiCall = 0; // Only for those that need to be rate limited
+    
+    signals:
 
-signals:
-
-private:
+    private:
     MainWindow* mainWindow;
     FileAgent *fileAgent;
     Instagram *instagram;
-
+    
     void Init();
     void InitInstagram();
-
+    
     const QPixmap* getCachedPixmap(const QString &id) const;
     void cachePixmap(const QString &id, const QPixmap &pixmap);
     bool isPixmapCached(const QString &id) const;
-
-
+    
+    
     appSettings settings;
     Instagram::userData *lisaStruct = nullptr;
     Instagram::userData *lloudStruct = nullptr;
     Instagram::userData *lfamilyStruct = nullptr;
-
-    int instagram_currentSelectedInstagramUser = 0; // 0 = LISA, 1 = LLOUD, 2 = LFAMILY // ALSO CALLED userIndex
+    
+    Instagram::userData *currentUser = nullptr;
+    int instagram_currentSelectedProfileIndex = 0;
 };
 
 #endif // MANAGER_H

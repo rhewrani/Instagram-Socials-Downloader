@@ -2,18 +2,18 @@
 #include <QPixmapCache>
 
 
-Instagram::Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkManagerRef, int lang, QString sessionid, QObject *parent)
+Instagram::Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkManagerRef, int lang, QString sessionid, userData *initialLoadUser, QObject *parent)
     : QObject{parent}
     , fileAgent{fileAgentRef}
     , networkManager{networkManagerRef}
     , settingsLanguage(lang)
     , settingsSessionid(sessionid)
 {
-    Init();
+    Init(initialLoadUser);
 }
 
 
-void Instagram::GET_userInfo(userData *user)
+void Instagram::GET_userInfo(userData *user, bool isProfileChecker)
 {
 
     if (!user->allowGetProfileInfo) return;
@@ -25,7 +25,7 @@ void Instagram::GET_userInfo(userData *user)
     setupHeaders(request, -1);
     QNetworkReply *reply = networkManager.get(request);
 
-    connect(reply, &QNetworkReply::finished, [this, reply, user] {
+    connect(reply, &QNetworkReply::finished, [this, reply, user, isProfileChecker] {
 
         user->allowGetProfileInfo = false;
 
@@ -34,8 +34,9 @@ void Instagram::GET_userInfo(userData *user)
         QByteArray responseData = reply->readAll();
 
         if (responseData.isEmpty()) {
-            Logger::instance()->critical("Response is empty!");
+            if (!isProfileChecker) Logger::instance()->critical("Response is empty!");
             reply->deleteLater();
+            emit signal_profileCheckerReceivedInfo(nullptr);
             return;
         }
 
@@ -43,19 +44,22 @@ void Instagram::GET_userInfo(userData *user)
         QJsonDocument doc = QJsonDocument::fromJson(responseData, &jsonError);
 
         if (jsonError.error != QJsonParseError::NoError) {
-            Logger::instance()->critical("JSON Parse Error: " + jsonError.errorString());
+            if (!isProfileChecker) Logger::instance()->critical("JSON Parse Error: " + jsonError.errorString());
             reply->deleteLater();
+            emit signal_profileCheckerReceivedInfo(nullptr);
             return;
         }
         QJsonObject res = doc.object();
         QJsonObject data = res.value("data").toObject();
         if (data.isEmpty()) {
-            Logger::instance()->critical("No 'data' object found in GraphQL response.");
+            if (!isProfileChecker) Logger::instance()->critical("No 'data' object found in GraphQL response.");
             reply->deleteLater();
+            emit signal_profileCheckerReceivedInfo(nullptr);
             return;
         }
         QJsonObject userObj = data.value("user").toObject();
         user->fullname = userObj.value("full_name").toString();
+        user->id = userObj.value("id").toString();
         user->biography = userObj.value("biography").toString();
         user->profilePicUrl = userObj.value("profile_pic_url").toString();
         user->followersCount = userObj.value("edge_followed_by").toObject().value("count").toInt();
@@ -63,7 +67,8 @@ void Instagram::GET_userInfo(userData *user)
 
         reply->deleteLater();
 
-        emit signal_updateMainPageProfileInfo(user, true);
+        if (!isProfileChecker) emit signal_updateMainPageProfileInfo(user, true);
+        else emit signal_profileCheckerReceivedInfo(user);
 
     });
 }
@@ -224,8 +229,6 @@ void Instagram::GET_post(const QString &shortcode, QHash<QString, contentNode> &
 
         QByteArray responseData = graphqlReply->readAll();
 
-        // Instead of throwing critical error, show error messages within the mainwindow instead
-
         if (responseData.isEmpty()) {
             Logger::instance()->critical("Error extracting post data. Please see log.txt for more information. [POST-ER]");
             Logger::instance()->critical("Response is empty!", false);
@@ -332,7 +335,6 @@ void Instagram::GET_story(const QString &username, QHash<QString, contentNode> &
         QJsonObject reelsMedia = extractReelsMedia(QString::fromUtf8(response));
 
         if (reelsMedia.isEmpty()) {
-            // to-do: add indicator which notifies the user to make sure the profile isn't private and has a story
             if (!isAutoFetch) {
                 if (storyFetchAttempts < 1) {
                     storyFetchAttempts++;
@@ -373,10 +375,9 @@ QString Instagram::t(const QString &key)
 }
 
 
-void Instagram::Init()
+void Instagram::Init(userData *initialLoadUser)
 {
-    generateSessionData(true);
-
+    generateSessionData(true, initialLoadUser);
 }
 
 QJsonObject Instagram::getObjectFromEntries(const QString &name, const QString &data)
@@ -467,7 +468,7 @@ QJsonObject Instagram::extractReelsMedia(const QString &htmlContent)
 }
 
 
-void Instagram::generateSessionData(int isInit)
+void Instagram::generateSessionData(int isInit, userData *initialLoadUser)
 {
     QUrl url("https://www.instagram.com/lalalalisa_m/");
     QNetworkRequest request(url);
@@ -475,7 +476,7 @@ void Instagram::generateSessionData(int isInit)
 
     QNetworkReply *reply = networkManager.get(request);
 
-    connect(reply, &QNetworkReply::finished, [this, reply, isInit] {
+    connect(reply, &QNetworkReply::finished, [this, reply, isInit,initialLoadUser] {
 
         if (!checkResponse(reply, "[SESSION]")) return;
 
@@ -513,8 +514,12 @@ void Instagram::generateSessionData(int isInit)
         anonCookie = anonCookieParts.join("; ");
 
         if (isInit) {
-            GET_userInfo(&LISA);
-            GET_userFeed(&LISA);
+            if (initialLoadUser) {
+                GET_userInfo(initialLoadUser);
+                GET_userFeed(initialLoadUser);
+            } else {
+                // TO-DO
+            }
         }
 
         reply->deleteLater();
@@ -865,19 +870,6 @@ bool Instagram::checkResponse(QNetworkReply *reply, const QString &origin, int c
     }
 
     return true;
-}
-
-Instagram::userData *Instagram::getUserPtr(int userIndex)
-{
-    if (userIndex == 0) {
-        return &LISA;
-    } else if (userIndex == 1) {
-        return &LLOUD;
-    } else if (userIndex == 2) {
-        return &LFAMILY;
-    }
-
-    return &LISA;
 }
 
 FeedListModel::FeedListModel(QObject *parent)

@@ -20,6 +20,9 @@ public:
 
     void pw_show();
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
 private slots:
     void on_PW_BTN_UP_clicked();
 
@@ -40,7 +43,15 @@ private:
     QList<Instagram::userData> profiles;
     QList<Instagram::userData> profilesEdit;
 
+    QPoint m_dragStartPosition;
+    bool m_isDragging = false;
+    QWidget *titleBar = nullptr;
+
+
     void Init();
+    void InitTitleBar();
+    void InitLang(); // TODO
+
     void pw_setData();
     void pw_updateList();
     void pw_checkDataChanged();

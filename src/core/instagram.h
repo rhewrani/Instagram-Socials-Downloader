@@ -8,9 +8,8 @@ class Instagram : public QObject
 {
     Q_OBJECT
 public:
-    explicit Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkManagerRef, int lang, QString sessionid, QObject *parent = nullptr);
 
-    struct contentChild {
+struct contentChild {
         QString type = "Image"; // Default for child
         QString mediaUrl;
         QString videoUrl;
@@ -75,13 +74,14 @@ public:
 
     userData* getUserPtr(int userIndex);
 
-    void GET_userInfo(userData *user);
+    void GET_userInfo(userData *user, bool isProfileChecker = false);
     void GET_userFeed(userData *user);
     void GET_post(const QString &shortcode, QHash<QString, contentNode> &hash);
     void GET_story(const QString &username, QHash<QString, contentNode> &hash, bool isAutoFetch);
 
     QString t(const QString &key);
 
+    explicit Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkManagerRef, int lang, QString sessionid, userData *initialLoadUser, QObject *parent = nullptr);
 signals:
 
     void signal_updateMainPageProfileInfo(Instagram::userData *user, bool loadStory);
@@ -89,6 +89,7 @@ signals:
     void signal_postFetched(const QString &shortcode);
     void signal_storyFetched(const QString &username, bool isAutoFetch);
     void signal_fetchFailed();
+    void signal_profileCheckerReceivedInfo(Instagram::userData *user);
 
 private:
     FileAgent *fileAgent;
@@ -98,11 +99,11 @@ private:
     // this is currently fixed by just creating a temporary QNetworkAccessManager for each call (which is automatically deleted afterwards) and works just as good
     // the issue is probably related with the connection protocol, both http1 and http2 being used, etc.
 
-    void Init();
+    void Init(userData *initialLoadUser);
     QJsonObject getObjectFromEntries(const QString& name, const QString& data);
     QJsonObject findReelsInObject(const QJsonObject &obj);
     QJsonObject findReelsInArray(const QJsonArray &arr);
-    void generateSessionData(int isInit = false);
+    void generateSessionData(int isInit, userData *initialLoadUser);
     void setupHeaders(QNetworkRequest &request, int headerSet);
     void extractFeedData(QJsonArray &arr, userData* user);
     contentNode extractPostData(QJsonObject &obj);
@@ -121,10 +122,6 @@ private:
     int storyFetchAttempts = 0;
     int settingsLanguage = 0;
     QString settingsSessionid;
-
-    userData LISA = { .username = "lalalalisa_m", .id = "8012033210" };
-    userData LLOUD = { .username = "wearelloud", .id = "64466054435" };
-    userData LFAMILY = { .username = "lalala_lfamily", .id = "49500655974" };
 
 };
 

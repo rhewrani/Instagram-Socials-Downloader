@@ -24,7 +24,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     void updateProfileInfoUI(Instagram::userData *user, bool loadStory = false);
     void updateProfileFeedUI(Instagram::userData *user);
-    void setProfileCombobox(const QList<Instagram::userData> &profiles);
+    void setProfileCombobox(const QList<Instagram::userData> &profiles, bool triggerIndexChanged = false, int selectedIndex = 0);
     void displayNodeContent(Instagram::contentNode *node);
     void toggleStoryButton(const QString &username);
     void updateGeneratedText();
