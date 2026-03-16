@@ -24,9 +24,9 @@ struct contentChild {
 
     struct contentNode {
         QString shortcode;
-        QString type = "Image"; // Default for feed node. If it's a carousel it's set to "MediaDict" and with videos/reel to "Video"
-        QString imageUrl; // Display and download url for single-image posts and MediaDicts (with MediaDicts it's just the first image in the carousel which is used as a thumbnail)
-        QString videoUrl; // Display and download url for reels (also for reels in feed)
+        QString type = "Image"; // Default for feed node
+        QString imageUrl;
+        QString videoUrl;
         QString location;
         QString caption;
         QString accessabilityCaption;
@@ -38,9 +38,9 @@ struct contentChild {
         QString foreignOwnerId;
         bool foreignOwnerIsVerified = false;
         bool isNew = false;
-        int originalDimensionHeight = 0; // Check whether this is needed
-        int originalDimensionWidth = 0; // Check whether this is needed
-        int videoUrlHeight = 0; // Might be able to delete Height/Width for video since it's unused
+        int originalDimensionHeight = 0; // todo: Check whether this is needed
+        int originalDimensionWidth = 0; // todo: Check whether this is needed
+        int videoUrlHeight = 0; // todo: Might be able to delete Height/Width for video since it's unused
         int videoUrlWidth = 0;
         int videoViewCount = 0;
         int likeCount = 0;
@@ -89,6 +89,7 @@ signals:
     void signal_postFetched(const QString &shortcode);
     void signal_storyFetched(const QString &username, bool isAutoFetch);
     void signal_fetchFailed();
+    void signal_loadEmpty();
     void signal_profileCheckerReceivedInfo(Instagram::userData *user);
 
 private:

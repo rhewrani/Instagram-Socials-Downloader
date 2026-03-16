@@ -19,9 +19,6 @@
         <file>images/settings_white.png</file>
         <file>images/info_white.png</file>
         <file>images/checkmark_white.png</file>
-        <file>emojis/lisa-giggling.png</file>
-        <file>emojis/lisa-heart.png</file>
-        <file>emojis/lisa-think.png</file>
-        <file>emojis/star.png</file>
+        <file>emojis/heart_white.png</file>
     </qresource>
 </RCC>

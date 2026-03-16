@@ -70,7 +70,7 @@ QListView::item {
      <height>630</height>
     </size>
    </property>
-   <widget class="QPushButton" name="PW_BTN_DOWN">
+   <widget class="QPushButton" name="BTN_DOWN">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -83,7 +83,7 @@ QListView::item {
      <string>DOWN</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="PW_BTN_ADD">
+   <widget class="QPushButton" name="BTN_ADD">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -96,12 +96,12 @@ QListView::item {
      <string>+</string>
     </property>
    </widget>
-   <widget class="QLabel" name="PW_TTL_2">
+   <widget class="QLabel" name="LBL_INFO">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>40</x>
       <y>570</y>
-      <width>271</width>
+      <width>321</width>
       <height>31</height>
      </rect>
     </property>
@@ -113,13 +113,16 @@ QListView::item {
     <property name="text">
      <string>First Item will get loaded first on startup</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
    </widget>
-   <widget class="QLabel" name="PW_TTL">
+   <widget class="QLabel" name="LBL_TTL">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>130</x>
       <y>10</y>
-      <width>111</width>
+      <width>131</width>
       <height>31</height>
      </rect>
     </property>
@@ -131,8 +134,11 @@ QListView::item {
     <property name="text">
      <string>Profile List</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
    </widget>
-   <widget class="QPushButton" name="PW_BTN_UP">
+   <widget class="QPushButton" name="BTN_UP">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -155,7 +161,7 @@ QListView::item {
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="PW_BTN_DEL">
+   <widget class="QPushButton" name="BTN_DEL">
     <property name="geometry">
      <rect>
       <x>320</x>

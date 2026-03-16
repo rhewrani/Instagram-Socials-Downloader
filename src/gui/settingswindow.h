@@ -71,13 +71,13 @@ private:
     bool restartRequired = false;
     bool saveButtonUsed = false;
 
-    QMap<QString, QString> params = { // dummy text for preview
+    QMap<QString, QString> params = { // todo: change this, maybe add support for more parameters (possibly only with params that are guaranteed)?
         {"user", "LISA"},
         {"caption", "First Emmys experience with my White lotus family 🪷"},
         {"link", "https://www.instagram.com/lalalalisa_m/p/DOqalquE4cU/"}
     };
 
-    QMap<QString, QString> paramsStory = { // dummy text for preview
+    QMap<QString, QString> paramsStory = { // todo: check whether there is text generation for stories at all
         {"user", "LLOUD"},
         {"link", "https://www.instagram.com/stories/wearelloud/"}
     };

@@ -1,5 +1,7 @@
 #include "../gui/mainwindow.h"
+#include "gui/mainwindow.h"
 #include "instagram.h"
+#include <cstddef>
 #include <qdebug.h>
 #include <qjsonobject.h>
 
@@ -110,11 +112,9 @@ bool Manager::saveSettings(appSettings settingsStruct, bool restart)
 
     root["app"] = appObj;
 
-    // User
     userObj["language"] = settingsStruct.intLanguage;
     root["user"] = userObj;
 
-    // Features
     featuresObj["enableLogging"] = settingsStruct.bEnableLogging;
     featuresObj["openFileExporerOnSave"] = settingsStruct.bOpenFileExplorerOnSave;
     featuresObj["enableDiscordQuoting"] = settingsStruct.bEnableDiscordQuoting;
@@ -129,7 +129,6 @@ bool Manager::saveSettings(appSettings settingsStruct, bool restart)
     }
     root["text_presets"] = setPresets;
 
-    // Data
     dataObj["downloadDir"] = settingsStruct.strDownloadDir;
     if (settings.strSessionid != settingsStruct.strSessionid) {
          dataObj["sessionid"] = settingsStruct.strSessionid;
@@ -289,7 +288,12 @@ void Manager::generateCopyPasteTextString(const QString &templateText, QTextEdit
 
 void Manager::instagram_GET_userInfo(const QString &username, bool isProfileChecker) // by name
 {
-    instagram->GET_userInfo(getProfilePtrFromName(username), isProfileChecker);
+    Instagram::userData *user = getProfilePtrFromName(username);
+    if (user == nullptr) {
+        user = new Instagram::userData();
+        user->username = username;
+    }
+    instagram->GET_userInfo(user, isProfileChecker);
 }
 
 void Manager::instagram_GET_userFeed(const QString &username)
@@ -334,6 +338,7 @@ void Manager::InitInstagram()
     instagram = new Instagram(fileAgent, networkManager, settings.intLanguage, settings.strSessionid, currentUser);
     connect(instagram, &Instagram::signal_updateMainPageProfileInfo, mainWindow, &MainWindow::updateProfileInfoUI);
     connect(instagram, &Instagram::signal_updateMainPageProfileFeed, mainWindow, &MainWindow::updateProfileFeedUI);
+    connect(instagram, &Instagram::signal_loadEmpty, mainWindow, &MainWindow::loadEmpty);
     connect(instagram, &Instagram::signal_fetchFailed, mainWindow, &MainWindow::resetPreviewWidget);
     connect(instagram, &Instagram::signal_postFetched, this, [this](const QString &shortcode) {
         if (m_postCache.contains(shortcode)) {

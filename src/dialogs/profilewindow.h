@@ -24,13 +24,13 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
-    void on_PW_BTN_UP_clicked();
+    void on_BTN_UP_clicked();
 
-    void on_PW_BTN_DOWN_clicked();
+    void on_BTN_DOWN_clicked();
 
-    void on_PW_BTN_ADD_clicked();
+    void on_BTN_ADD_clicked();
 
-    void on_PW_BTN_DEL_clicked();
+    void on_BTN_DEL_clicked();
 
 signals:
     void signal_updateProfileList(const QList<Instagram::userData> &profilesEdit);
@@ -40,7 +40,7 @@ private:
     Manager *manager;
     ProfileChecker *profileChecker;
 
-    QList<Instagram::userData> profiles;
+    QList<Instagram::userData> &profiles;
     QList<Instagram::userData> profilesEdit;
 
     QPoint m_dragStartPosition;
@@ -50,7 +50,7 @@ private:
 
     void Init();
     void InitTitleBar();
-    void InitLang(); // TODO
+    void InitLang();
 
     void pw_setData();
     void pw_updateList();

@@ -42,6 +42,7 @@ void MainWindow::updateProfileInfoUI(Instagram::userData* user, bool loadStory)
     ui->INST_USER_FOL_CON->setText(formatNumber(user->followersCount));
     ui->INST_USER_POST_CON->setText(formatNumber(user->postsCount));
     
+    ui->INST_WDGT_USER->setCurrentIndex(0);
 
     if (loadStory) {
         manager->instagram_GET_Story(user->username);
@@ -70,7 +71,11 @@ void MainWindow::updateProfileFeedUI(Instagram::userData *user)
     user->appendFeed.clear();
     user->allowUpdateProfileFeedUI = false;
     user->shouldFeedUIRefresh = false;
-    // ui->INST_WDGT_USER->setCurrentIndex(manager->instagram_getCurrentSelectedUser());
+
+    ui->INST_LBL_LOAD->setVisible(false);
+    ui->INST_LV_FEED->setVisible(true);
+
+
 
     show();
     raise();
@@ -83,10 +88,30 @@ void MainWindow::updateProfileFeedUI(Instagram::userData *user)
     initialLoad();
 }
 
+void MainWindow::loadEmpty() {
+
+    ui->INST_LBL_LOAD->setVisible(false);
+    ui->INST_LV_FEED->setVisible(false);
+    show();
+    raise();
+    activateWindow();
+    if (overlay) {
+        overlay->hide();
+        overlay->deleteLater();
+        overlay = nullptr;
+    }
+    initialLoad();
+}
 void MainWindow::setProfileCombobox(const QList<Instagram::userData> &profiles, bool triggerIndexChanged, int selectedIndex)
 {
     ui->INST_CMBX_USER->blockSignals(true);
     ui->INST_CMBX_USER->clear();
+    if (selectedIndex >= profiles.length()) {
+        selectedIndex = profiles.length() - 1;
+    } else if (profiles.isEmpty()) {
+        selectedIndex = -1;
+    }
+
     for (const auto &user : profiles) {
         ui->INST_CMBX_USER->addItem(user.fullname);
     }
@@ -246,7 +271,7 @@ void MainWindow::InitUI()
                                                    ""));
     INST_MDIA_PFP->setScaledContents(true);
 
-    setLabelTextWithEmoji(ui->INST_LBL_MDST, _("NO_MDIA"), "lisa-think.png");
+    ui->INST_LBL_MDST->setText(_("NO_MDIA"));
     ui->INST_WDGT_PRVW_PGS->setVisible(false);
     ui->INST_MDIA_VERI->setVisible(false);
     ui->INST_MDIA_ACPT->setVisible(false);
@@ -257,6 +282,10 @@ void MainWindow::InitUI()
     ui->INST_MDCT_NEW->setVisible(false);
     ui->INST_USER_STRY->setVisible(false);
     ui->INST_LN_RES->setContextMenuPolicy(Qt::DefaultContextMenu);
+
+    ui->INST_WDGT_USER->setCurrentIndex(1);
+    ui->INST_LV_FEED->setVisible(false);
+    ui->INST_LBL_LOAD->setVisible(false);
 
     auto feed = ui->INST_LV_FEED;
     feed->setModel(model);
@@ -294,6 +323,8 @@ void MainWindow::InitLang()
 
     ui->INST_LBL_OR->setText(_("OR"));
     ui->INST_LN_LINK->setPlaceholderText(_("LINK"));
+    ui->INST_LBL_LOAD->setText(_("LOAD"));
+    ui->INST_LBL_STS->setText(_("NONE"));
 
     fitTextToButton(ui->INST_BTN_DOWN, _("BTN_DOWN"));
     fitTextToButton(ui->BTN_MGC, _("BTN_MGC"));
@@ -303,6 +334,7 @@ void MainWindow::InitLang()
 
     ui->menuMenu->setTitle(_("MBR_MENU"));
     ui->MENU_OPEN_SETT->setText(_("MBR_MENU_SET"));
+    ui->MENU_OPEN_PRFL->setText(_("MBR_MENU_PRFL"));
     ui->MENU_OPEN_INFO->setText(_("MBR_MENU_INFO"));
 }
 
@@ -650,7 +682,7 @@ void MainWindow::updateGeneratedText()
 
 void MainWindow::resetPreviewWidget()
 {
-    setLabelTextWithEmoji(ui->INST_LBL_MDST, _("NO_MDIA"), "lisa-think.png");
+    ui->INST_LBL_MDST->setText(_("NO_MDIA"));
     currentSelectedNode = nullptr;
     ui->INST_WDGT_PRVW_PGS->setVisible(false);
     ui->INST_LN_RES->clear();
@@ -756,7 +788,6 @@ void MainWindow::showToast(const QString &message, ToastType type, int durationM
     int offset = 0;
     if (isVideo) offset = 130;
     int x = (width() - m_toastLabel->width()) / 2 - offset;
-    qDebug() << "x: " << x << " offset " << offset;
     m_toastLabel->move(x, 100);
     m_toastLabel->show();
     m_toastLabel->raise();
@@ -778,15 +809,33 @@ void MainWindow::on_INST_CMBX_USER_currentIndexChanged(int index)
     manager->instagram_setCurrentSelectedUserIndex(index);
     auto user = manager->instagram_getCurrentSelectedUser();
     resetPreviewWidget();
+    ui->INST_LV_FEED->setVisible(false);
+    ui->INST_LBL_LOAD->setText(_("LOAD"));
+    ui->INST_LBL_LOAD->setVisible(true);
+    
     if (!user->allowGetProfileFeed) {
-        //ui->INST_WDGT_USER->setCurrentIndex(manager->instagram_getCurrentSelectedUserIndex());
         user->allowUpdateProfileFeedUI = true;
         user->shouldFeedUIRefresh = true;
         updateProfileFeedUI(user);
-        return;
+    } else {
+        ui->INST_WDGT_USER->setCurrentIndex(1);
+        ui->INST_LBL_STS->setText(_("LOAD"));
+        manager->instagram_GET_userInfo(user->username);
+        manager->instagram_GET_userFeed(user->username);
     }
-    manager->instagram_GET_userInfo(manager->instagram_getCurrentSelectedUser()->username);
-    manager->instagram_GET_userFeed(manager->instagram_getCurrentSelectedUser()->username);
+
+    // revert to following if fails
+    // if (!user->allowGetProfileFeed) {
+    //     user->allowUpdateProfileFeedUI = true;
+    //     user->shouldFeedUIRefresh = true;
+    //     updateProfileFeedUI(user);
+    //     return;
+    // }
+    // ui->INST_WDGT_USER->setCurrentIndex(1);
+    // ui->INST_LBL_STS->setText(_("LOAD"));
+    // manager->instagram_GET_userInfo(manager->instagram_getCurrentSelectedUser()->username);
+    // manager->instagram_GET_userFeed(manager->instagram_getCurrentSelectedUser()->username);
+    //
 
 }
 
@@ -806,7 +855,7 @@ void MainWindow::on_INST_LV_FEED_clicked(const QModelIndex &index)
 void MainWindow::on_INST_BTN_NP_clicked()
 {
     overlay = new BlockingOverlay(this, "");
-    setLabelTextWithEmoji(overlay->m_label, _("INFO_NP"), "star.png");
+    overlay->m_label->setText(_("INFO_NP"));
     overlay->show();
     qApp->processEvents();
 
@@ -832,13 +881,6 @@ void MainWindow::on_INST_BTN_RFSH_clicked()
     manager->instagram_GET_userFeed(manager->instagram_getCurrentSelectedUser()->username);
     manager->lastApiCall = QDateTime::currentSecsSinceEpoch();
 }
-
-
-void MainWindow::on_INST_LV_POST_clicked(const QModelIndex &index)
-{
-
-}
-
 
 void MainWindow::on_INST_BTN_PLBK_clicked()
 {
@@ -943,13 +985,10 @@ void MainWindow::on_BTN_SAVE_clicked()
 {
 
     if (!currentSelectedNode || currentSelectedNode->type != "MediaDict") return;
-
     QMap<int, Instagram::contentChild> map;
 
     QItemSelectionModel *selectionModel = ui->INST_LV_POST->selectionModel();
     QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
-
-    qDebug() << selectedIndexes.size();
 
     if (selectedIndexes.size() == 0) return;
 
@@ -972,7 +1011,6 @@ void MainWindow::on_BTN_SAVE_clicked()
         counter++;
 
     }
-
     queueSaveMedia(map);
 }
 
@@ -1008,7 +1046,7 @@ void MainWindow::on_MENU_OPEN_INFO_triggered()
     }
 }
 
-void MainWindow::on_MENU_OPEN_PROFILES_triggered()
+void MainWindow::on_MENU_OPEN_PRFL_triggered()
 {
     if (profilewindow->isVisible()) {
         profilewindow->raise();

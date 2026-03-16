@@ -73,10 +73,10 @@ public:
 
     void setParentWidget(QWidget *parent, int dateFormat);
 
-    void log(const QString &message, bool MB = false, QWidget *parent = nullptr);           // Info (Standard)
+    void log(const QString &message, bool MB = false, QWidget *parent = nullptr); // Info (Standard)
     void warning(const QString &message, bool MB = true, QWidget *parent = nullptr); // Warning
     void critical(const QString &message, bool MB = true, QWidget *parent = nullptr); // Cricital
-    void debug(const QString &message);         // Debug
+    void debug(const QString &message); // Debug
 private:
     QFile logFile;
     QTextStream logStream;

@@ -281,7 +281,7 @@ void Instagram::GET_post(const QString &shortcode, QHash<QString, contentNode> &
 
         QJsonObject postObj = dataObj.value("xdt_shortcode_media").toObject();
         if (postObj.isEmpty()) {
-            if (postFetchAttempts < 1) { // max 1 more attempt before ultimately failing
+            if (postFetchAttempts < 1) {
                 postFetchAttempts++;
                 Logger::instance()->critical("Failed to get post data, attempting again...", false);
                 GET_post(shortcode, hash);
@@ -518,7 +518,7 @@ void Instagram::generateSessionData(int isInit, userData *initialLoadUser)
                 GET_userInfo(initialLoadUser);
                 GET_userFeed(initialLoadUser);
             } else {
-                // TO-DO
+                emit signal_loadEmpty();
             }
         }
 

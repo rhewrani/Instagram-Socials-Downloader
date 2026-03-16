@@ -7,7 +7,6 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     w.overlay = new BlockingOverlay(nullptr, "Loading data…");
-    setLabelTextWithEmoji(w.overlay->m_label, "Loading data…", "star.png");
     w.overlay->show();
     qApp->processEvents();
 

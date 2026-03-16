@@ -87,6 +87,6 @@ void Infodialog::InitLang()
 {
     ui->LBL_TTL->setText(_("INFO_TTL"));
     ui->LBL_RHEW->setText(_("INFO_RHEW"));
-    setLabelTextWithEmoji(ui->LBL_INST, _("INFO_INST"), "", "lisa-heart.png");
+    setLabelTextWithEmoji(ui->LBL_INST, _("INFO_INST"), "", "heart-white.png");
     fitTextToLabel(ui->LBL_INST, ui->LBL_INST->text());
 }

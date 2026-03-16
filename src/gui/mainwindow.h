@@ -30,6 +30,7 @@ public:
     void updateGeneratedText();
     void resetPreviewWidget();
     void initialLoad();
+    void loadEmpty();
 
     void showToast(const QString &message, ToastType type = Info, int durationMs = 3000, bool isVideo = false);
 
@@ -50,8 +51,6 @@ private slots:
     void on_INST_BTN_NP_clicked();
 
     void on_INST_BTN_RFSH_clicked();
-
-    void on_INST_LV_POST_clicked(const QModelIndex &index);
 
     void on_INST_BTN_PLBK_clicked();
 
@@ -77,7 +76,7 @@ private slots:
 
     void hideToast();
 
-    void on_MENU_OPEN_PROFILES_triggered();
+    void on_MENU_OPEN_PRFL_triggered();
 
 private:
     Ui::MainWindow *ui;

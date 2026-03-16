@@ -82,7 +82,7 @@ public:
     void instagram_GET_userInfo(const QString &username, bool isProfileChecker = false);
     void instagram_GET_userFeed(const QString &username);
     void instagram_GET_PostFromShortcode(const QString &shortcode);
-    void instagram_GET_Story(const QString &username, bool isAutoFetch = true); // Autofetch is true at program init and when switching + refreshing the user info. This basically tells the program to not instantly display the story when fetched
+    void instagram_GET_Story(const QString &username, bool isAutoFetch = true);
 
     
     QHash<QString, QPixmap> m_imageCache;

@@ -294,6 +294,25 @@ QListView QScrollBar::sub-page:vertical {
       <enum>QListView::ViewMode::IconMode</enum>
      </property>
     </widget>
+    <widget class="QLabel" name="INST_LBL_LOAD">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>110</y>
+       <width>411</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: #a8a8a8;</string>
+     </property>
+     <property name="text">
+      <string>Loading...</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
    <widget class="QLabel" name="INST_LBL_OR">
     <property name="geometry">
@@ -400,7 +419,7 @@ QPushButton {
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="INST_PG_USER">
      <widget class="QLabel" name="INST_USER_PFP">
@@ -608,6 +627,27 @@ background-image: url(:/images/lisa.jpg);
      <zorder>INST_USER_FOL_CON</zorder>
      <zorder>label</zorder>
      <zorder>INST_USER_STRY</zorder>
+    </widget>
+    <widget class="QWidget" name="INST_PG_NONE">
+     <widget class="QLabel" name="INST_LBL_STS">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>80</y>
+        <width>411</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #a8a8a8;</string>
+      </property>
+      <property name="text">
+       <string>No profile selected. Go to &quot;setting&quot;s &gt; &quot;Open profiles…&quot; to add a profile</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QPushButton" name="INST_BTN_NP">
@@ -1382,7 +1422,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <string>Menu</string>
     </property>
     <addaction name="MENU_OPEN_SETT"/>
-    <addaction name="MENU_OPEN_PROFILES"/>
+    <addaction name="MENU_OPEN_PRFL"/>
     <addaction name="MENU_OPEN_INFO"/>
    </widget>
    <addaction name="menuMenu"/>
@@ -1405,7 +1445,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <string>Info</string>
    </property>
   </action>
-  <action name="MENU_OPEN_PROFILES">
+  <action name="MENU_OPEN_PRFL">
    <property name="text">
     <string>Open profiles...</string>
    </property>

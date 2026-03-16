@@ -1,10 +1,11 @@
 #include "profilechecker.h"
 #include "ui_profilechecker.h"
 
-ProfileChecker::ProfileChecker(Manager *managerRef, QWidget *parent)
+ProfileChecker::ProfileChecker(Manager *managerRef, QList<Instagram::userData> &profilesEditRef, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::ProfileChecker)
     , manager(managerRef)
+    , profilesEdit(profilesEditRef)
 {
     ui->setupUi(this);
 
@@ -56,7 +57,7 @@ void ProfileChecker::InitTitleBar() {
     QHBoxLayout *titleLayout = new QHBoxLayout(titleBar);
     titleLayout->setContentsMargins(10, 0, 10, 0);
 
-    QLabel *titleLabel = new QLabel(_("SET_TTL"));
+    QLabel *titleLabel = new QLabel(_("PRFL_LOOK"));
     titleLabel->setStyleSheet("font-size: 14px; font-weight: bold;");
 
     QPushButton *closeBtn = new QPushButton("×");
@@ -85,7 +86,15 @@ void ProfileChecker::InitTitleBar() {
 }
 
 void ProfileChecker::InitLang() {
-
+    ui->BTN_CHECK_USER->setText(_("PRFL_CHCK"));
+    ui->BTN_SAVE->setText(_("BTN_SAVE"));
+    ui->BTN_CNCL->setText(_("BTN_CAN"));
+    ui->LBL_FND->setText(_("PRFL_FND"));
+    ui->LBL_NFND->setText(_("PRFL_NFND"));
+    ui->LN_OUTP_ID->setText(_("PRFL_ID"));
+    ui->LN_OUTP_USER->setText(_("PRFL_USER"));
+    ui->LN_OUTP_NAME->setText(_("PRFL_NAME"));
+    ui->LN_INPT_USER->setPlaceholderText(_("PRFL_PLCH"));
 }
 
 void ProfileChecker::setupUI()
@@ -96,11 +105,14 @@ void ProfileChecker::setupUI()
     ui->LN_OUTP_ID->hide();
     ui->LN_OUTP_USER->hide();
     ui->LN_OUTP_NAME->hide();
+    ui->line->hide();
+
 }
 
 void ProfileChecker::pc_show()
 {
     show();
+    pc_clearData();
 }
 
 void ProfileChecker::pc_clearData()
@@ -117,6 +129,16 @@ void ProfileChecker::pc_clearData()
     ui->LN_OUTP_USER->hide();
     ui->LN_OUTP_NAME->hide();
     ui->line->hide();
+
+    ui->BTN_SAVE->setHidden(true);
+    editUser = nullptr;
+}
+
+bool ProfileChecker::pc_checkUserExists(const QString &id) {
+    for (const auto &profile : profilesEdit) {
+        if (profile.id == id) return true;
+    }
+    return false;
 }
 
 void ProfileChecker::on_BTN_CHECK_USER_clicked()
@@ -124,20 +146,19 @@ void ProfileChecker::on_BTN_CHECK_USER_clicked()
     const QString username = ui->LN_INPT_USER->text();
     if (username.isEmpty()) return;
 
+    ui->BTN_SAVE->setHidden(true);
     manager->instagram_GET_userInfo(username, true);
 
-    // when checking if the user exists: already add the user to the profiles list if found (but not in the json! just editProfiles)
-    // so that we dont have to all again when the user presses on save
-    // and if the user decides to not to keep the found user, just remove it from the profiles list
-    
 }
 
-void ProfileChecker::on_receivedProfileInfo(Instagram::userData *user, QList<Instagram::userData> *profilesEdit)
+void ProfileChecker::on_receivedProfileInfo(Instagram::userData *user)
 {
     if (user == nullptr) {
         ui->LBL_NFND->show();
         return;
     }
+
+    ui->BTN_SAVE->setHidden(false);
 
     pc_helperSetPfpImageFromURL(ui->LBL_USER_PFP, user->profilePicUrl, user->id, 150, 150);
     ui->LN_OUTP_ID->setText(user->id);
@@ -150,6 +171,8 @@ void ProfileChecker::on_receivedProfileInfo(Instagram::userData *user, QList<Ins
     ui->LN_OUTP_USER->show();
     ui->LN_OUTP_NAME->show();
     ui->line->show();
+
+    editUser = user;
 }
 
 void ProfileChecker::pc_helperSetPfpImageFromURL(QLabel *target, QString &url, QString &id, int dimX, int dimY)
@@ -177,3 +200,20 @@ void ProfileChecker::pc_helperSetPfpImageFromURL(QLabel *target, QString &url, Q
                                   ).arg(dimX/2));
     });
 }
+
+void ProfileChecker::on_BTN_SAVE_clicked()
+{
+    if (pc_checkUserExists(editUser->id)) {
+         Logger::instance()->warning(_(""));
+        return;
+    }
+    profilesEdit.append(*editUser);
+    close();
+}
+
+
+void ProfileChecker::on_BTN_CNCL_clicked()
+{
+    close();
+}
+

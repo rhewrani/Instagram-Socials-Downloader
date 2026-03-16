@@ -8,7 +8,7 @@ ProfileWindow::ProfileWindow(Manager *managerRef, QWidget *parent)
     , profiles(manager->getProfiles())
 {
     ui->setupUi(this);
-    profileChecker = new ProfileChecker(manager, this);
+    profileChecker = new ProfileChecker(manager, profilesEdit, this);
     profilesEdit = profiles;
     Init();
 }
@@ -63,7 +63,7 @@ void ProfileWindow::Init()
 
     connect(manager->getInstagram(), &Instagram::signal_profileCheckerReceivedInfo,
             profileChecker, [this](Instagram::userData *user) {
-                profileChecker->on_receivedProfileInfo(user, &profilesEdit);
+                profileChecker->on_receivedProfileInfo(user);
             });
 }
 
@@ -77,7 +77,7 @@ void ProfileWindow::InitTitleBar() {
     QHBoxLayout *titleLayout = new QHBoxLayout(titleBar);
     titleLayout->setContentsMargins(10, 0, 10, 0);
 
-    QLabel *titleLabel = new QLabel(_("SET_TTL"));
+    QLabel *titleLabel = new QLabel(_("PRFL_TTL"));
     titleLabel->setStyleSheet("font-size: 14px; font-weight: bold;");
 
     QPushButton *closeBtn = new QPushButton("×");
@@ -106,12 +106,13 @@ void ProfileWindow::InitTitleBar() {
 }
 
 void ProfileWindow::InitLang() {
-
+    ui->LBL_TTL->setText(_("PRFL_TTL"));
+    ui->LBL_INFO->setText(_("PRFL_INFO"));
 }
 
 void ProfileWindow::pw_setData()
 {
-    profilesEdit = manager->getProfiles();
+    profilesEdit = profiles;
     pw_updateList();
 }
 
@@ -142,11 +143,10 @@ void ProfileWindow::pw_checkDataChanged()
             return;
         }
     }
-
     dataChanged = false;
 }
 
-void ProfileWindow::on_PW_BTN_ADD_clicked()
+void ProfileWindow::on_BTN_ADD_clicked()
 {
     if (profileChecker->isVisible()) {
         profileChecker->raise();
@@ -156,14 +156,14 @@ void ProfileWindow::on_PW_BTN_ADD_clicked()
     }
 }
 
-void ProfileWindow::on_PW_BTN_DEL_clicked()
+void ProfileWindow::on_BTN_DEL_clicked()
 {
     if (ui->PW_LIST->currentRow() == -1) return;
     profilesEdit.removeAt(ui->PW_LIST->currentRow());
     pw_updateList();
 }
 
-void ProfileWindow::on_PW_BTN_UP_clicked()
+void ProfileWindow::on_BTN_UP_clicked()
 {
     int currentRow = ui->PW_LIST->currentRow();
     if (currentRow <= 0) return;
@@ -176,7 +176,7 @@ void ProfileWindow::on_PW_BTN_UP_clicked()
 }
 
 
-void ProfileWindow::on_PW_BTN_DOWN_clicked()
+void ProfileWindow::on_BTN_DOWN_clicked()
 {
     int currentRow = ui->PW_LIST->currentRow();
     if (currentRow == ui->PW_LIST->count() - 1 || currentRow == -1) return;
