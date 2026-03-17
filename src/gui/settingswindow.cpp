@@ -149,7 +149,7 @@ void Settingswindow::sw_setData()
     editSettings = settings;
 
     ui->CMBX_LANG->setCurrentIndex(editSettings.intLanguage);
-    ui->CKBX_DQ->setChecked(editSettings.bEnableDiscordQuoting);
+    ui->CKBX_DQ->setChecked(editSettings.bEnableQuoting);
     ui->CKBX_EAC->setChecked(editSettings.bAutoCopyText);
     ui->CKBX_OFE->setChecked(editSettings.bOpenFileExplorerOnSave);
     ui->LN_TDF->setText(editSettings.strDownloadDir);
@@ -178,7 +178,7 @@ void Settingswindow::checkVariables()
         return;
     }
 
-    if (editSettings.bEnableDiscordQuoting != settings.bEnableDiscordQuoting) {
+    if (editSettings.bEnableQuoting != settings.bEnableQuoting) {
         settingsChanged = true;
     }
 
@@ -212,9 +212,9 @@ void Settingswindow::on_CKBX_OFE_checkStateChanged(const Qt::CheckState &arg1)
 
 void Settingswindow::on_CKBX_DQ_checkStateChanged(const Qt::CheckState &arg1)
 {
-    editSettings.bEnableDiscordQuoting = arg1;
-    manager->generateCopyPasteTextString(ui->LN_TGEN_INP->toPlainText(), ui->LN_TGEN_PRVW, params, editSettings.bEnableDiscordQuoting);
-    manager->generateCopyPasteTextString(ui->LN_TGEN_INP2->toPlainText(), ui->LN_TGEN_PRVW2, paramsStory, editSettings.bEnableDiscordQuoting);
+    editSettings.bEnableQuoting = arg1;
+    manager->generateCopyPasteTextString(ui->LN_TGEN_INP->toPlainText(), ui->LN_TGEN_PRVW, params, editSettings.bEnableQuoting);
+    manager->generateCopyPasteTextString(ui->LN_TGEN_INP2->toPlainText(), ui->LN_TGEN_PRVW2, paramsStory, editSettings.bEnableQuoting);
 }
 
 
@@ -247,13 +247,13 @@ void Settingswindow::on_BTN_TDF_OPEN_clicked()
 void Settingswindow::on_LN_TGEN_INP_textChanged()
 {
     editSettings.presets["instagram_post"] = ui->LN_TGEN_INP->toPlainText();
-    manager->generateCopyPasteTextString(ui->LN_TGEN_INP->toPlainText(), ui->LN_TGEN_PRVW, params, editSettings.bEnableDiscordQuoting);
+    manager->generateCopyPasteTextString(ui->LN_TGEN_INP->toPlainText(), ui->LN_TGEN_PRVW, params, editSettings.bEnableQuoting);
 }
 
 void Settingswindow::on_LN_TGEN_INP2_textChanged()
 {
     editSettings.presets["instagram_story"] = ui->LN_TGEN_INP2->toPlainText();
-    manager->generateCopyPasteTextString(ui->LN_TGEN_INP2->toPlainText(), ui->LN_TGEN_PRVW2, paramsStory, editSettings.bEnableDiscordQuoting);
+    manager->generateCopyPasteTextString(ui->LN_TGEN_INP2->toPlainText(), ui->LN_TGEN_PRVW2, paramsStory, editSettings.bEnableQuoting);
 }
 
 
@@ -263,13 +263,13 @@ void Settingswindow::on_BTN_RESET_clicked()
     editSettings.presets["instagram_story"] = "{user} shared a story on Instagram!\n\n{link}";
     editSettings.intLanguage = 0;
     editSettings.bAutoCopyText = true;
-    editSettings.bEnableDiscordQuoting = true;
+    editSettings.bEnableQuoting = true;
     editSettings.bOpenFileExplorerOnSave = true;
     editSettings.strDownloadDir = "";
     editSettings.strSessionid = "";
 
     ui->CMBX_LANG->setCurrentIndex(editSettings.intLanguage);
-    ui->CKBX_DQ->setChecked(editSettings.bEnableDiscordQuoting);
+    ui->CKBX_DQ->setChecked(editSettings.bEnableQuoting);
     ui->CKBX_EAC->setChecked(editSettings.bAutoCopyText);
     ui->CKBX_OFE->setChecked(editSettings.bOpenFileExplorerOnSave);
     ui->LN_TDF->setText(editSettings.strDownloadDir);

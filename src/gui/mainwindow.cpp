@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::updateProfileInfoUI(Instagram::userData* user, bool loadStory)
 {
+    if (user) {
     if (!user->allowUpdateProfileInfoUI) return;
 
     setPfpImageFromURL(ui->INST_USER_PFP, user->profilePicUrl, user->id, 150, 150);
@@ -41,11 +42,17 @@ void MainWindow::updateProfileInfoUI(Instagram::userData* user, bool loadStory)
     ui->INST_USER_BIO->setText(user->biography);
     ui->INST_USER_FOL_CON->setText(formatNumber(user->followersCount));
     ui->INST_USER_POST_CON->setText(formatNumber(user->postsCount));
+    ui->INST_USER_VERI->setVisible(user->isVerified);
+    ui->INST_USER_STRY->setVisible(false);
     
     ui->INST_WDGT_USER->setCurrentIndex(0);
-
+    
     if (loadStory) {
         manager->instagram_GET_Story(user->username);
+    }
+    } else {
+        ui->INST_WDGT_USER->setCurrentIndex(1);
+        ui->INST_LBL_STS->setText(_("ERR_FTCH_FAIL"));
     }
 
     user->allowUpdateProfileInfoUI = false;
@@ -102,24 +109,54 @@ void MainWindow::loadEmpty() {
     }
     initialLoad();
 }
+
+void MainWindow::resetProfileInfoUI() {
+    
+    ui->INST_USER_PFP->clear();
+    ui->INST_USER_USER->clear();
+    ui->INST_USER_NAME->clear();
+    ui->INST_USER_BIO->clear();
+    ui->INST_USER_FOL_CON->setText(formatNumber(0));
+    ui->INST_USER_POST_CON->setText(formatNumber(0));
+    ui->INST_LBL_STS->setText(_("NONE"));
+    ui->INST_WDGT_USER->setCurrentIndex(1);
+
+}
+
 void MainWindow::setProfileCombobox(const QList<Instagram::userData> &profiles, bool triggerIndexChanged, int selectedIndex)
 {
     ui->INST_CMBX_USER->blockSignals(true);
     ui->INST_CMBX_USER->clear();
-    if (selectedIndex >= profiles.length()) {
-        selectedIndex = profiles.length() - 1;
-    } else if (profiles.isEmpty()) {
-        selectedIndex = -1;
+
+    int resolvedIndex = -1;
+    Instagram::userData *currentUser = manager ? manager->instagram_getCurrentSelectedUser() : nullptr;
+
+    if (!profiles.isEmpty()) {
+        if (currentUser) {
+            for (int i = 0; i < profiles.size(); ++i) {
+                if (profiles[i].username == currentUser->username) {
+                    resolvedIndex = i;
+                    break;
+                }
+            }
+
+            if (resolvedIndex == -1) {
+                resolvedIndex = qMin(selectedIndex, profiles.size() - 1);
+                resolvedIndex = qMax(resolvedIndex, 0);
+            }
+        } else {
+            resolvedIndex = qBound(0, selectedIndex, profiles.size() - 1);
+        }
     }
 
     for (const auto &user : profiles) {
         ui->INST_CMBX_USER->addItem(user.fullname);
     }
-    ui->INST_CMBX_USER->setCurrentIndex(selectedIndex);
+    ui->INST_CMBX_USER->setCurrentIndex(resolvedIndex);
     ui->INST_CMBX_USER->blockSignals(false);
     
     if (triggerIndexChanged) {
-        on_INST_CMBX_USER_currentIndexChanged(selectedIndex);
+        on_INST_CMBX_USER_currentIndexChanged(resolvedIndex);
     }
 }
 
@@ -324,7 +361,8 @@ void MainWindow::InitLang()
     ui->INST_LBL_OR->setText(_("OR"));
     ui->INST_LN_LINK->setPlaceholderText(_("LINK"));
     ui->INST_LBL_LOAD->setText(_("LOAD"));
-    ui->INST_LBL_STS->setText(_("NONE"));
+
+    manager->instagram_getCurrentSelectedUser() ? ui->INST_LBL_STS->setText(_("LOAD")) : ui->INST_LBL_STS->setText(_("NONE"));
 
     fitTextToButton(ui->INST_BTN_DOWN, _("BTN_DOWN"));
     fitTextToButton(ui->BTN_MGC, _("BTN_MGC"));
@@ -369,6 +407,7 @@ void MainWindow::setPfpImageFromURL(QLabel *target, QString &url, QString &id, i
 
 void MainWindow::toggleStoryButton(const QString &username)
 {
+    qDebug() << "toggleStoryButton" << username;
    ui->INST_USER_STRY->setVisible(true);
 }
 
@@ -499,6 +538,7 @@ void MainWindow::openPfpViewer()
 
 void MainWindow::displayNodeContent(Instagram::contentNode *node)
 {
+    Instagram::userData* user = manager->instagram_getCurrentSelectedUser();
     currentSelectedNode = node;
     QMap<QString, QString> params;
 
@@ -510,8 +550,6 @@ void MainWindow::displayNodeContent(Instagram::contentNode *node)
             childModel->setChildren(node->children);
             downloadChildMediaImages(node->children);
         }
-
-        Instagram::userData* user = manager->instagram_getCurrentSelectedUser();
         if (!node->foreignOwnerUsername.isEmpty()) {
             params["user"] = node->foreignOwnerFullname;
             setPfpImageFromURL(INST_MDCT_PFP, node->foreignOwnerPfpUrl, node->foreignOwnerId, 50, 50);
@@ -597,7 +635,6 @@ void MainWindow::displayNodeContent(Instagram::contentNode *node)
 
         }
 
-        Instagram::userData* user = manager->instagram_getCurrentSelectedUser();
         if (!node->foreignOwnerUsername.isEmpty()) {
             params["user"] = node->foreignOwnerFullname;
             setPfpImageFromURL(INST_MDIA_PFP, node->foreignOwnerPfpUrl, node->foreignOwnerId, 50, 50);
@@ -656,12 +693,22 @@ void MainWindow::displayNodeContent(Instagram::contentNode *node)
     }
 
     params["caption"] = node->caption;
+    params["username"] = !node->foreignOwnerUsername.isEmpty() ? node->foreignOwnerUsername : user->username;
+    params["fullname"] = !node->foreignOwnerFullname.isEmpty() ? node->foreignOwnerFullname : user->fullname;
+    params["biography"] = user->biography;
+    params["followers"] = formatNumber(user->followersCount);
+    params["posts_count"] = formatNumber(user->postsCount);
+    params["timestamp"] = node->timestamp;
+    params["location"] = node->location;
+    params["likes"] = node->likeCount != -1 ? formatNumber(node->likeCount) : "0";
+    params["comments"] = node->commentCount != -1 ? formatNumber(node->commentCount) : "0";
+    params["views"] = formatNumber(node->videoViewCount);
+
     QString targetTemplate;
     if (node->type == "Story") {
-        params["link"] = QString("https://www.instagram.com/stories/%1/").arg(node->foreignOwnerUsername);
+        params["link"] = QString("https://www.instagram.com/stories/%1/").arg(params["username"]);
         targetTemplate = "instagram_story";
     } else {
-        params["caption"] = node->caption;
         params["link"] = QString("https://www.instagram.com/p/%1/").arg(node->shortcode);
         targetTemplate = "instagram_post";
     }
@@ -806,36 +853,37 @@ void MainWindow::hideToast()
 
 void MainWindow::on_INST_CMBX_USER_currentIndexChanged(int index)
 {
+    if (index != manager->instagram_getCurrentSelectedUserIndex()) {
+        resetPreviewWidget();
+    }
     manager->instagram_setCurrentSelectedUserIndex(index);
-    auto user = manager->instagram_getCurrentSelectedUser();
-    resetPreviewWidget();
+    Instagram::userData *user = nullptr;
+    
     ui->INST_LV_FEED->setVisible(false);
-    ui->INST_LBL_LOAD->setText(_("LOAD"));
+    
+    if (index == -1) {
+        ui->INST_LBL_LOAD->setVisible(false);
+        resetProfileInfoUI();
+        return;
+    }
+    
+    user = manager->instagram_getCurrentSelectedUser();
     ui->INST_LBL_LOAD->setVisible(true);
     
     if (!user->allowGetProfileFeed) {
         user->allowUpdateProfileFeedUI = true;
         user->shouldFeedUIRefresh = true;
         updateProfileFeedUI(user);
+
+        user->allowUpdateProfileInfoUI = true;
+        updateProfileInfoUI(user, true);
+
     } else {
         ui->INST_WDGT_USER->setCurrentIndex(1);
         ui->INST_LBL_STS->setText(_("LOAD"));
         manager->instagram_GET_userInfo(user->username);
         manager->instagram_GET_userFeed(user->username);
     }
-
-    // revert to following if fails
-    // if (!user->allowGetProfileFeed) {
-    //     user->allowUpdateProfileFeedUI = true;
-    //     user->shouldFeedUIRefresh = true;
-    //     updateProfileFeedUI(user);
-    //     return;
-    // }
-    // ui->INST_WDGT_USER->setCurrentIndex(1);
-    // ui->INST_LBL_STS->setText(_("LOAD"));
-    // manager->instagram_GET_userInfo(manager->instagram_getCurrentSelectedUser()->username);
-    // manager->instagram_GET_userFeed(manager->instagram_getCurrentSelectedUser()->username);
-    //
 
 }
 
@@ -972,7 +1020,6 @@ void MainWindow::on_BTN_MGC_clicked()
 {
 
     if (!currentSelectedNode) return;
-    if (!currentSelectedNode->children.isEmpty() && currentSelectedNode->children.size() > 10) showToast(_("WARN_SIZE"), Warning, 5000);
     queueSaveMedia();
     if (manager->getSettingsStruct().bAutoCopyText) {
         clipboard->setText(ui->INST_LN_RES->toPlainText());
@@ -984,17 +1031,13 @@ void MainWindow::on_BTN_MGC_clicked()
 void MainWindow::on_BTN_SAVE_clicked()
 {
 
-    if (!currentSelectedNode || currentSelectedNode->type != "MediaDict") return;
+    if (!currentSelectedNode || (currentSelectedNode->type != "MediaDict" && currentSelectedNode->type != "Story")) return;
     QMap<int, Instagram::contentChild> map;
 
     QItemSelectionModel *selectionModel = ui->INST_LV_POST->selectionModel();
     QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
 
     if (selectedIndexes.size() == 0) return;
-
-    if (selectedIndexes.size() > 10) {
-        showToast(_("WARN_SIZE"), Warning, 5000);
-    }
 
     std::sort(selectedIndexes.begin(), selectedIndexes.end());
     int counter = 0;

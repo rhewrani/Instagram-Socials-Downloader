@@ -15,7 +15,6 @@ Instagram::Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkMana
 
 void Instagram::GET_userInfo(userData *user, bool isProfileChecker)
 {
-
     if (!user->allowGetProfileInfo) return;
 
     QString urlString = "https://www.instagram.com/api/v1/users/web_profile_info/?username=%1";
@@ -27,9 +26,13 @@ void Instagram::GET_userInfo(userData *user, bool isProfileChecker)
 
     connect(reply, &QNetworkReply::finished, [this, reply, user, isProfileChecker] {
 
-        user->allowGetProfileInfo = false;
+        if (!isProfileChecker) user->allowGetProfileInfo = false;
 
-        if(!checkResponse(reply, "[USER_INFO]")) return;
+        if(!checkResponse(reply, "[USER_INFO]", 1)) {
+            if (!isProfileChecker) emit signal_updateMainPageProfileInfo(nullptr, false);
+            else emit signal_profileCheckerReceivedInfo(nullptr);
+            return;
+        }
 
         QByteArray responseData = reply->readAll();
 
@@ -64,6 +67,7 @@ void Instagram::GET_userInfo(userData *user, bool isProfileChecker)
         user->profilePicUrl = userObj.value("profile_pic_url").toString();
         user->followersCount = userObj.value("edge_followed_by").toObject().value("count").toInt();
         user->postsCount = userObj.value("edge_owner_to_timeline_media").toObject().value("count").toInt();
+        user->isVerified = userObj.value("is_verified").toBool();
 
         reply->deleteLater();
 
@@ -304,9 +308,9 @@ void Instagram::GET_post(const QString &shortcode, QHash<QString, contentNode> &
 
 void Instagram::GET_story(const QString &username, QHash<QString, contentNode> &hash, bool isAutoFetch)
 {
+    if (settingsSessionid.isEmpty()) return;
 
     QUrl url(QString("https://www.instagram.com/stories/%1/?r=1").arg(username));
-
 
     QNetworkRequest request(url);
 
@@ -360,6 +364,7 @@ void Instagram::GET_story(const QString &username, QHash<QString, contentNode> &
             return;
         }
 
+        qDebug() << "story found";
         QJsonArray reelsArray = reelsMedia["reels_media"].toArray();
         contentNode story = extractStoryData(reelsArray.first().toObject());
         hash[username] = story;
@@ -851,7 +856,7 @@ bool Instagram::checkResponse(QNetworkReply *reply, const QString &origin, int c
 {
     if (reply->error()) {
         if (currentAttempt > 0) {
-            Logger::instance()->critical(t("ERR_FTCH_FAIL") + " " + origin);
+            Logger::instance()->critical(t("ERR_FTCH_FAIL") + " " + origin, false);
             Logger::instance()->critical("Response: " + reply->errorString(), false);
             Logger::instance()->critical("If response is 'Host requires authentication', wait a few minutes before trying again", false);
         }

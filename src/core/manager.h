@@ -34,7 +34,7 @@ public:
     struct appSettings {
         bool bEnableLogging = false;
         bool bOpenFileExplorerOnSave = true;
-        bool bEnableDiscordQuoting = true;
+        bool bEnableQuoting = true;
         bool bAutoCopyText = true;
         bool bIsFirstOpen = true;
         int intLanguage = 0;
@@ -74,6 +74,8 @@ public:
         instagram_currentSelectedProfileIndex = index;
         if (index >= 0 && index < profiles.size()) {
             currentUser = &profiles[index];
+        } else {
+            currentUser = nullptr;
         }
     }
     Instagram::userData* instagram_getCurrentSelectedUser() { return currentUser; }
@@ -91,7 +93,7 @@ public:
     
     QList<Instagram::userData> profiles;
     
-    int lastApiCall = 0; // Only for those that need to be rate limited
+    int lastApiCall = 0;
     
     signals:
 

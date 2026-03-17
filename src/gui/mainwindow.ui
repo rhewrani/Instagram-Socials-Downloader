@@ -230,7 +230,7 @@ QListView QScrollBar::sub-page:vertical {
      <string>Do magic</string>
     </property>
     <property name="icon">
-     <iconset resource="../resources/resources.qrc">
+     <iconset>
       <normaloff>:/emojis/star.png</normaloff>:/emojis/star.png</iconset>
     </property>
     <property name="iconSize">
@@ -419,7 +419,7 @@ QPushButton {
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="INST_PG_USER">
      <widget class="QLabel" name="INST_USER_PFP">
@@ -588,10 +588,10 @@ background-image: url(:/images/lisa.jpg);
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="INST_USER_VERI">
       <property name="geometry">
        <rect>
-        <x>280</x>
+        <x>154</x>
         <y>10</y>
         <width>25</width>
         <height>24</height>
@@ -625,7 +625,7 @@ background-image: url(:/images/lisa.jpg);
      <zorder>INST_USER_USER</zorder>
      <zorder>INST_USER_BIO</zorder>
      <zorder>INST_USER_FOL_CON</zorder>
-     <zorder>label</zorder>
+     <zorder>INST_USER_VERI</zorder>
      <zorder>INST_USER_STRY</zorder>
     </widget>
     <widget class="QWidget" name="INST_PG_NONE">
@@ -1446,6 +1446,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
   </action>
   <action name="MENU_OPEN_PRFL">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/images/user-pen_white.png</normaloff>:/images/user-pen_white.png</iconset>
+   </property>
    <property name="text">
     <string>Open profiles...</string>
    </property>

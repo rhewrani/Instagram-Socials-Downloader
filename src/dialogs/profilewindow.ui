@@ -80,7 +80,11 @@ QListView::item {
      </rect>
     </property>
     <property name="text">
-     <string>DOWN</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="../resources/resources.qrc">
+      <normaloff>:/images/chevron-down_white.png</normaloff>:/images/chevron-down_white.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="BTN_ADD">
@@ -93,7 +97,11 @@ QListView::item {
      </rect>
     </property>
     <property name="text">
-     <string>+</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="../resources/resources.qrc">
+      <normaloff>:/images/user-plus_white.png</normaloff>:/images/user-plus_white.png</iconset>
     </property>
    </widget>
    <widget class="QLabel" name="LBL_INFO">
@@ -148,7 +156,11 @@ QListView::item {
      </rect>
     </property>
     <property name="text">
-     <string>UP</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="../resources/resources.qrc">
+      <normaloff>:/images/chevron-up_white.png</normaloff>:/images/chevron-up_white.png</iconset>
     </property>
    </widget>
    <widget class="QListWidget" name="PW_LIST">
@@ -171,11 +183,17 @@ QListView::item {
      </rect>
     </property>
     <property name="text">
-     <string>-</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="../resources/resources.qrc">
+      <normaloff>:/images/user-minus_white.png</normaloff>:/images/user-minus_white.png</iconset>
     </property>
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

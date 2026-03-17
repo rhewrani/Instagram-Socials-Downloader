@@ -1,7 +1,6 @@
 #include "../gui/mainwindow.h"
 #include "gui/mainwindow.h"
 #include "instagram.h"
-#include <cstddef>
 #include <qdebug.h>
 #include <qjsonobject.h>
 
@@ -51,10 +50,27 @@ QString Manager::t(const QString &key)
 
 bool Manager::saveProfiles(QList<Instagram::userData> profilesEdit)
 {
-    qDebug() << "Saving profiles";
+    for (int i = 0; i < profilesEdit.size(); ++i) {
+        for (const auto &oldProfile : profiles) {
+            if (profilesEdit[i].username == oldProfile.username) {
+                profilesEdit[i] = oldProfile;
+                break;
+            }
+        }
+    }
 
+    QString selectedUsername = currentUser ? currentUser->username : QString();
     profiles = profilesEdit;
-    
+    currentUser = nullptr;
+
+    for (int i = 0; i < profiles.size(); ++i) {
+        if (profiles[i].username == selectedUsername) {
+            currentUser = &profiles[i];
+            instagram_currentSelectedProfileIndex = i;
+            break;
+        }
+    }
+
     QFile file("profiles.json");
 
     QJsonDocument doc = fileAgent->File_GetDataDocument(file);
@@ -93,7 +109,7 @@ bool Manager::saveSettings(appSettings settingsStruct, bool restart)
         settings.presets = settingsStruct.presets;
         settings.bEnableLogging = settingsStruct.bEnableLogging;
         settings.bOpenFileExplorerOnSave = settingsStruct.bOpenFileExplorerOnSave;
-        settings.bEnableDiscordQuoting = settingsStruct.bEnableDiscordQuoting;
+        settings.bEnableQuoting = settingsStruct.bEnableQuoting;
         settings.bAutoCopyText = settingsStruct.bAutoCopyText;
         settings.strDownloadDir = settingsStruct.strDownloadDir;
     }
@@ -117,7 +133,7 @@ bool Manager::saveSettings(appSettings settingsStruct, bool restart)
 
     featuresObj["enableLogging"] = settingsStruct.bEnableLogging;
     featuresObj["openFileExporerOnSave"] = settingsStruct.bOpenFileExplorerOnSave;
-    featuresObj["enableDiscordQuoting"] = settingsStruct.bEnableDiscordQuoting;
+    featuresObj["enableQuoting"] = settingsStruct.bEnableQuoting;
     featuresObj["autoCopyText"] = settingsStruct.bAutoCopyText;
     featuresObj["isFirstOpen"] = settingsStruct.bIsFirstOpen;
     root["features"] = featuresObj;
@@ -245,7 +261,7 @@ void Manager::generateCopyPasteText(const QString &presetKey, QTextEdit *target,
         result.replace(placeholder, it.value());
     }
 
-    if (params.contains("caption") && settings.bEnableDiscordQuoting) {
+    if (params.contains("caption") && settings.bEnableQuoting) {
         QString caption = params.value("caption");
         if (!caption.isEmpty()) {
             QFontMetrics fm(target->font());
@@ -288,10 +304,12 @@ void Manager::generateCopyPasteTextString(const QString &templateText, QTextEdit
 
 void Manager::instagram_GET_userInfo(const QString &username, bool isProfileChecker) // by name
 {
-    Instagram::userData *user = getProfilePtrFromName(username);
-    if (user == nullptr) {
+    Instagram::userData *user;
+    if (isProfileChecker) {
         user = new Instagram::userData();
         user->username = username;
+    } else {
+        user = getProfilePtrFromName(username);
     }
     instagram->GET_userInfo(user, isProfileChecker);
 }
@@ -346,11 +364,13 @@ void Manager::InitInstagram()
         }
     });
     connect(instagram, &Instagram::signal_storyFetched, this, [this](const QString &username, bool isAutoFetch) {
+        qDebug() << "signal_storyFetched" << username << isAutoFetch;
         if (m_storyCache.contains(username)) {
 
             if (!isAutoFetch) {
                 mainWindow->displayNodeContent(&m_storyCache[username]);
             }
+            qDebug() << "toggleStoryButton" << username;
             mainWindow->toggleStoryButton(username);
 
         }
@@ -425,7 +445,7 @@ void Manager::GetSettings()
     QJsonObject dataObj = settingsRoot.value("data").toObject();
 
     settings.bOpenFileExplorerOnSave = featuresObj.value("openFileExporerOnSave").toBool();
-    settings.bEnableDiscordQuoting = featuresObj.value("enableDiscordQuoting").toBool();
+    settings.bEnableQuoting = featuresObj.value("enableQuoting").toBool();
     settings.bAutoCopyText = featuresObj.value("autoCopyText").toBool();
     settings.bIsFirstOpen = featuresObj.value("isFirstOpen").toBool();
 

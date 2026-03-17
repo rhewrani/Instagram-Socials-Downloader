@@ -20,5 +20,10 @@
         <file>images/info_white.png</file>
         <file>images/checkmark_white.png</file>
         <file>emojis/heart_white.png</file>
+        <file>images/chevron-down_white.png</file>
+        <file>images/chevron-up_white.png</file>
+        <file>images/user-minus_white.png</file>
+        <file>images/user-pen_white.png</file>
+        <file>images/user-plus_white.png</file>
     </qresource>
 </RCC>

@@ -329,7 +329,7 @@ QMessageBox QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string>Enable Discord quoting</string>
+     <string>Enable quoting</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="CKBX_EAC">

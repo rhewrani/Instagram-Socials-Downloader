@@ -20,13 +20,11 @@ public:
 
     void on_receivedProfileInfo(Instagram::userData *user);
 
-    // TO-DO: 
-    // 1. Prevent usage of profilewindow if profilechecker is opened (maybe not?)
-    // 2. Prevent adding the same user twice (just check if the user id is already in the list)
-    // 3. Remove discord stuff
-
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
+
+signals:
+    void signal_updateProfileList();
 
 private slots:
     void on_BTN_CHECK_USER_clicked();

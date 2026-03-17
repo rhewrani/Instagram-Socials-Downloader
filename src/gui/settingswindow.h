@@ -71,15 +71,30 @@ private:
     bool restartRequired = false;
     bool saveButtonUsed = false;
 
-    QMap<QString, QString> params = { // todo: change this, maybe add support for more parameters (possibly only with params that are guaranteed)?
+    QMap<QString, QString> params = {
         {"user", "LISA"},
+        {"username", "lalalalisa_m"},
+        {"fullname", "LISA"},
         {"caption", "First Emmys experience with my White lotus family 🪷"},
-        {"link", "https://www.instagram.com/lalalalisa_m/p/DOqalquE4cU/"}
+        {"link", "https://www.instagram.com/lalalalisa_m/p/DOqalquE4cU/"},
+        {"likes", "1,234,567"},
+        {"comments", "12,345"},
+        {"views", "0"},
+        {"timestamp", "2024-03-17"},
+        {"location", "Los Angeles, California"},
+        {"biography", "Lalisa Manobal / LLOUD"},
+        {"followers", "102,000,000"},
+        {"posts_count", "1,200"}
     };
 
-    QMap<QString, QString> paramsStory = { // todo: check whether there is text generation for stories at all
+    QMap<QString, QString> paramsStory = {
         {"user", "LLOUD"},
-        {"link", "https://www.instagram.com/stories/wearelloud/"}
+        {"username", "wearelloud"},
+        {"fullname", "LLOUD"},
+        {"link", "https://www.instagram.com/stories/wearelloud/"},
+        {"biography", "Official account for LLOUD"},
+        {"followers", "5,000,000"},
+        {"posts_count", "150"}
     };
 };
 

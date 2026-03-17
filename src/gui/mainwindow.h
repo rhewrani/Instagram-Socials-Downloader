@@ -31,6 +31,7 @@ public:
     void resetPreviewWidget();
     void initialLoad();
     void loadEmpty();
+    void resetProfileInfoUI();
 
     void showToast(const QString &message, ToastType type = Info, int durationMs = 3000, bool isVideo = false);
 
@@ -80,7 +81,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Manager *manager;
+    Manager *manager = nullptr;
     Settingswindow *settingswindow;
     ProfileWindow *profilewindow;
     MediaViewerDialog* mediaViewer;

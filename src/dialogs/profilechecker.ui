@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>400</height>
+    <height>380</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>500</width>
-    <height>400</height>
+    <height>380</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -62,7 +62,7 @@ QTextEdit, QLineEdit {
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>350</height>
+     <height>380</height>
     </rect>
    </property>
    <property name="maximumSize">
@@ -116,7 +116,7 @@ QTextEdit, QLineEdit {
      <rect>
       <x>30</x>
       <y>55</y>
-      <width>191</width>
+      <width>301</width>
       <height>71</height>
      </rect>
     </property>
@@ -126,7 +126,7 @@ QTextEdit, QLineEdit {
      </font>
     </property>
     <property name="text">
-     <string>Not found! Please make sure that the user exists and the profile is public</string>
+     <string>Not found! Please make sure that the user exists and the profile is public (this might also be due to Instagrams rate-limiting).</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -240,7 +240,7 @@ QTextEdit, QLineEdit {
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>175</y>
+      <y>160</y>
       <width>150</width>
       <height>150</height>
      </rect>
@@ -283,6 +283,25 @@ background-image: url(:/images/lisa.jpg);
     </property>
     <property name="text">
      <string>Found!</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LBL_LOAD">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>20</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: #a8a8a8;</string>
+    </property>
+    <property name="text">
+     <string>Loading...</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
   </widget>

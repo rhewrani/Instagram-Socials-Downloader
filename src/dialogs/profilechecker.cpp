@@ -91,6 +91,7 @@ void ProfileChecker::InitLang() {
     ui->BTN_CNCL->setText(_("BTN_CAN"));
     ui->LBL_FND->setText(_("PRFL_FND"));
     ui->LBL_NFND->setText(_("PRFL_NFND"));
+    ui->LBL_LOAD->setText(_("LOAD"));
     ui->LN_OUTP_ID->setText(_("PRFL_ID"));
     ui->LN_OUTP_USER->setText(_("PRFL_USER"));
     ui->LN_OUTP_NAME->setText(_("PRFL_NAME"));
@@ -99,13 +100,14 @@ void ProfileChecker::InitLang() {
 
 void ProfileChecker::setupUI()
 {
-    ui->LBL_NFND->hide();
-    ui->LBL_FND->hide();
-    ui->LBL_USER_PFP->hide();
-    ui->LN_OUTP_ID->hide();
-    ui->LN_OUTP_USER->hide();
-    ui->LN_OUTP_NAME->hide();
-    ui->line->hide();
+    ui->LBL_NFND->setVisible(false);
+    ui->LBL_FND->setVisible(false);
+    ui->LBL_LOAD->setVisible(false);
+    ui->LBL_USER_PFP->setVisible(false);
+    ui->LN_OUTP_ID->setVisible(false);
+    ui->LN_OUTP_USER->setVisible(false);
+    ui->LN_OUTP_NAME->setVisible(false);
+    ui->line->setVisible(false);
 
 }
 
@@ -122,13 +124,14 @@ void ProfileChecker::pc_clearData()
     ui->LN_OUTP_USER->clear();
     ui->LN_OUTP_NAME->clear();
 
-    ui->LBL_NFND->hide();
-    ui->LBL_FND->hide();
-    ui->LBL_USER_PFP->hide();
-    ui->LN_OUTP_ID->hide();
-    ui->LN_OUTP_USER->hide();
-    ui->LN_OUTP_NAME->hide();
-    ui->line->hide();
+    ui->LBL_NFND->setVisible(false);
+    ui->LBL_FND->setVisible(false);
+    ui->LBL_LOAD->setVisible(false);
+    ui->LBL_USER_PFP->setVisible(false);
+    ui->LN_OUTP_ID->setVisible(false);
+    ui->LN_OUTP_USER->setVisible(false);
+    ui->LN_OUTP_NAME->setVisible(false);
+    ui->line->setVisible(false);
 
     ui->BTN_SAVE->setHidden(true);
     editUser = nullptr;
@@ -147,14 +150,18 @@ void ProfileChecker::on_BTN_CHECK_USER_clicked()
     if (username.isEmpty()) return;
 
     ui->BTN_SAVE->setHidden(true);
+    ui->LBL_LOAD->setVisible(true);
     manager->instagram_GET_userInfo(username, true);
 
 }
 
 void ProfileChecker::on_receivedProfileInfo(Instagram::userData *user)
 {
+    ui->LBL_LOAD->setVisible(false);    
+
     if (user == nullptr) {
-        ui->LBL_NFND->show();
+        setupUI();
+        ui->LBL_NFND->setVisible(true);
         return;
     }
 
@@ -165,12 +172,12 @@ void ProfileChecker::on_receivedProfileInfo(Instagram::userData *user)
     ui->LN_OUTP_USER->setText(user->username);
     ui->LN_OUTP_NAME->setText(user->fullname);
     
-    ui->LBL_FND->show();
-    ui->LBL_USER_PFP->show();
-    ui->LN_OUTP_ID->show();
-    ui->LN_OUTP_USER->show();
-    ui->LN_OUTP_NAME->show();
-    ui->line->show();
+    ui->LBL_FND->setVisible(true);
+    ui->LBL_USER_PFP->setVisible(true);
+    ui->LN_OUTP_ID->setVisible(true);
+    ui->LN_OUTP_USER->setVisible(true);
+    ui->LN_OUTP_NAME->setVisible(true);
+    ui->line->setVisible(true);
 
     editUser = user;
 }
@@ -204,11 +211,12 @@ void ProfileChecker::pc_helperSetPfpImageFromURL(QLabel *target, QString &url, Q
 void ProfileChecker::on_BTN_SAVE_clicked()
 {
     if (pc_checkUserExists(editUser->id)) {
-         Logger::instance()->warning(_(""));
+         Logger::instance()->warning(_("PRFL_ALRDY_SAVED"));
         return;
     }
     profilesEdit.append(*editUser);
     close();
+    emit signal_updateProfileList();
 }
 
 

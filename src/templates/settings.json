@@ -8,7 +8,7 @@
     },
     "features": {
         "autoCopyText": true,
-        "enableDiscordQuoting": true,
+        "enableQuoting": true,
         "enableLogging": false,
         "openFileExporerOnSave": true,
 		"isFirstOpen": true

@@ -1,4 +1,5 @@
 #include "profilewindow.h"
+#include "profilechecker.h"
 #include "ui_profilewindow.h"
 
 ProfileWindow::ProfileWindow(Manager *managerRef, QWidget *parent)
@@ -65,6 +66,8 @@ void ProfileWindow::Init()
             profileChecker, [this](Instagram::userData *user) {
                 profileChecker->on_receivedProfileInfo(user);
             });
+
+    connect(profileChecker, &ProfileChecker::signal_updateProfileList, this, &ProfileWindow::pw_updateList);
 }
 
 void ProfileWindow::InitTitleBar() {

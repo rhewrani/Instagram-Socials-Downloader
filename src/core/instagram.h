@@ -65,6 +65,7 @@ struct contentChild {
         bool allowUpdateProfileFeedUI = true;
         bool shouldFeedUIRefresh = true;
         bool hasNextPage = false;
+        bool isVerified = false;
         QMap<int, contentNode> feed;
         QList<contentNode> appendFeed;
 
