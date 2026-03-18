@@ -407,7 +407,6 @@ void MainWindow::setPfpImageFromURL(QLabel *target, QString &url, QString &id, i
 
 void MainWindow::toggleStoryButton(const QString &username)
 {
-    qDebug() << "toggleStoryButton" << username;
    ui->INST_USER_STRY->setVisible(true);
 }
 
@@ -650,10 +649,10 @@ void MainWindow::displayNodeContent(Instagram::contentNode *node)
         }
 
         ui->INST_MDIA_CAPT->setText(node->caption);
-            if (!node->accessabilityCaption.isEmpty()) {
-            fitTextToLabel(ui->INST_MDIA_ACPT, node->accessabilityCaption);
+            if (!node->accessibilityCaption.isEmpty()) {
+            fitTextToLabel(ui->INST_MDIA_ACPT, node->accessibilityCaption);
         }
-        ui->INST_MDIA_ACPT->setHidden(node->accessabilityCaption.isEmpty());
+        ui->INST_MDIA_ACPT->setHidden(node->accessibilityCaption.isEmpty());
 
         if (!node->location.isEmpty()) {
             ui->INST_MDIA_LOC->setText(node->location);
@@ -692,9 +691,9 @@ void MainWindow::displayNodeContent(Instagram::contentNode *node)
         ui->INST_WDGT_PRVW_PGS->setCurrentIndex(1);
     }
 
-    params["caption"] = node->caption;
     params["username"] = !node->foreignOwnerUsername.isEmpty() ? node->foreignOwnerUsername : user->username;
-    params["fullname"] = !node->foreignOwnerFullname.isEmpty() ? node->foreignOwnerFullname : user->fullname;
+    params["id"] = !node->foreignOwnerId.isEmpty() ? node->foreignOwnerId : user->id;
+    params["caption"] = node->caption;
     params["biography"] = user->biography;
     params["followers"] = formatNumber(user->followersCount);
     params["posts_count"] = formatNumber(user->postsCount);
@@ -703,6 +702,12 @@ void MainWindow::displayNodeContent(Instagram::contentNode *node)
     params["likes"] = node->likeCount != -1 ? formatNumber(node->likeCount) : "0";
     params["comments"] = node->commentCount != -1 ? formatNumber(node->commentCount) : "0";
     params["views"] = formatNumber(node->videoViewCount);
+    params["pfp_url"] = !node->foreignOwnerPfpUrl.isEmpty() ? node->foreignOwnerPfpUrl : user->profilePicUrl;
+    params["image_url"] = node->imageUrl;
+    params["video_url"] = node->videoUrl;
+    params["shortcode"] = node->shortcode;
+    params["type"] = node->type;
+    params["accessibility_caption"] = node->accessibilityCaption;
 
     QString targetTemplate;
     if (node->type == "Story") {

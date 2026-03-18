@@ -57,8 +57,8 @@ void MediaViewerDialog::displayMediaContent(Instagram::contentChild *child)
         setMinimumHeight(680);
     }
 
-    if (!child->accessabilityCaption.isEmpty()) fitTextToLabel(ui->LBL_ACPT, child->accessabilityCaption);
-    ui->LBL_ACPT->setHidden(child->accessabilityCaption.isEmpty());
+    if (!child->accessibilityCaption.isEmpty()) fitTextToLabel(ui->LBL_ACPT, child->accessibilityCaption);
+    ui->LBL_ACPT->setHidden(child->accessibilityCaption.isEmpty());
 }
 
 void MediaViewerDialog::displayPfp(Instagram::contentChild child)

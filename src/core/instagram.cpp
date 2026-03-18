@@ -1,5 +1,6 @@
 #include "instagram.h"
 #include <QPixmapCache>
+#include <cmath>
 
 
 Instagram::Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkManagerRef, int lang, QString sessionid, userData *initialLoadUser, QObject *parent)
@@ -364,7 +365,6 @@ void Instagram::GET_story(const QString &username, QHash<QString, contentNode> &
             return;
         }
 
-        qDebug() << "story found";
         QJsonArray reelsArray = reelsMedia["reels_media"].toArray();
         contentNode story = extractStoryData(reelsArray.first().toObject());
         hash[username] = story;
@@ -640,7 +640,7 @@ void Instagram::extractFeedData(QJsonArray &arr, userData *user)
         }
 
         if (!nodeObj.value("accessibility_caption").isNull()) {
-            feedNode.accessabilityCaption = nodeObj.value("accessibility_caption").toString();
+            feedNode.accessibilityCaption = nodeObj.value("accessibility_caption").toString();
         }
 
         if(!nodeObj.value("image_versions2").isNull()) {
@@ -657,8 +657,6 @@ void Instagram::extractFeedData(QJsonArray &arr, userData *user)
             // Entire Post is just a video/reel
             feedNode.type = "Video";
             QJsonObject videoObj = nodeObj["video_versions"].toArray().first().toObject();
-            feedNode.videoUrlWidth =videoObj.value("width").toInt();
-            feedNode.videoUrlHeight =videoObj.value("height").toInt();
             feedNode.videoUrl = videoObj.value("url").toString().trimmed();
 
 
@@ -676,7 +674,7 @@ void Instagram::extractFeedData(QJsonArray &arr, userData *user)
                     child.dimensionWidth = carouselObj.value("original_width").toInt();
 
                     if (!carouselObj.value("accessibility_caption").isNull()) {
-                        child.accessabilityCaption = carouselObj.value("accessibility_caption").toString();
+                        child.accessibilityCaption = carouselObj.value("accessibility_caption").toString();
                     }
 
                     if (!carouselObj.value("video_versions").isNull()) {
@@ -754,7 +752,7 @@ Instagram::contentNode Instagram::extractPostData(QJsonObject &postObj)
     }
 
     if (!postObj.value("accessibility_caption").isNull()) {
-        post.accessabilityCaption = postObj.value("accessibility_caption").toString();
+        post.accessibilityCaption = postObj.value("accessibility_caption").toString();
     }
 
     post.imageUrl = postObj.value("display_url").toString();
@@ -780,7 +778,7 @@ Instagram::contentNode Instagram::extractPostData(QJsonObject &postObj)
             child.dimensionWidth = dimensionObj.value("width").toInt();
 
             if (!childObj.value("accessibility_caption").isNull()) {
-                child.accessabilityCaption = childObj.value("accessibility_caption").toString();
+                child.accessibilityCaption = childObj.value("accessibility_caption").toString();
             }
 
             child.mediaUrl = childObj.value("display_url").toString();
@@ -836,7 +834,7 @@ Instagram::contentNode Instagram::extractStoryData(const QJsonObject &storyObj)
         child.dimensionWidth = childObj.value("original_width").toInt();
 
         if (!childObj.value("accessibility_caption").isNull()) {
-            child.accessabilityCaption = childObj.value("accessibility_caption").toString();
+            child.accessibilityCaption = childObj.value("accessibility_caption").toString();
         }
 
         child.mediaUrl = childObj.value("image_versions2").toObject().value("candidates").toArray().first().toObject().value("url").toString();
@@ -1131,21 +1129,21 @@ void Instagram::userData::clear()
 
 void Instagram::userData::dump()
 {
-    qDebug() << "USER DATA DUMP FOR " << username;
-    qDebug() << "FULLNAME: " << fullname;
-    qDebug() << "BIOGRAPHY: " << biography;
-    qDebug() << "PROFILE PIC URL: " << profilePicUrl;
-    qDebug() << "ENDCURSOR: " << endCursor;
-    qDebug() << "FOLLOWERS COUNT: " << followersCount;
-    qDebug() << "POSTS COUNT: " << postsCount;
-    qDebug() << "CURRNT FEED INDEX: " << currentFeedIndex;
-    qDebug() << "ALLOW GET PROFILE INFO: " << allowGetProfileInfo;
-    qDebug() << "ALLOW GET PROFILE FEED: " << allowGetProfileFeed;;
-    qDebug() << "ALLOW UPDATE PROFILE INFO UI: " << allowUpdateProfileInfoUI;
-    qDebug() << "ALLOW UPDATE PROFILE FEED UI: " << allowUpdateProfileFeedUI;
-    qDebug() << "SHOULD FEED UI REFRESH: " << shouldFeedUIRefresh;
-    qDebug() << "HAS NEXT PAGE " << hasNextPage;
-    qDebug() << "FEED SIZE: " << feed.size();
-    qDebug() << "APPEND FEED SIZE:  " << appendFeed.size();
+    Logger::instance()->debug("USER DATA DUMP FOR " + username);
+    Logger::instance()->debug("FULLNAME: " + fullname);
+    Logger::instance()->debug("BIOGRAPHY: " + biography);
+    Logger::instance()->debug("PROFILE PIC URL: " + profilePicUrl);
+    Logger::instance()->debug("ENDCURSOR: " + endCursor);
+    Logger::instance()->debug("FOLLOWERS COUNT: " + QString::number(followersCount));
+    Logger::instance()->debug("POSTS COUNT: " + QString::number(postsCount));
+    Logger::instance()->debug("CURRENT FEED INDEX: " + QString::number(currentFeedIndex));
+    Logger::instance()->debug("ALLOW GET PROFILE INFO: " + QString::number(allowGetProfileInfo));
+    Logger::instance()->debug("ALLOW GET PROFILE FEED: " + QString::number(allowGetProfileFeed));
+    Logger::instance()->debug("ALLOW UPDATE PROFILE INFO UI: " + QString::number(allowUpdateProfileInfoUI));
+    Logger::instance()->debug("ALLOW UPDATE PROFILE FEED UI: " + QString::number(allowUpdateProfileFeedUI));
+    Logger::instance()->debug("SHOULD FEED UI REFRESH: " + QString::number(shouldFeedUIRefresh));
+    Logger::instance()->debug("HAS NEXT PAGE " + QString::number(hasNextPage));
+    Logger::instance()->debug("FEED SIZE: " + QString::number(feed.size()));
+    Logger::instance()->debug("APPEND FEED SIZE:  " + QString::number(appendFeed.size()));
 
 }

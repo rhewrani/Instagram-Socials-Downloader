@@ -72,29 +72,27 @@ private:
     bool saveButtonUsed = false;
 
     QMap<QString, QString> params = {
-        {"user", "LISA"},
-        {"username", "lalalalisa_m"},
-        {"fullname", "LISA"},
-        {"caption", "First Emmys experience with my White lotus family 🪷"},
-        {"link", "https://www.instagram.com/lalalalisa_m/p/DOqalquE4cU/"},
-        {"likes", "1,234,567"},
-        {"comments", "12,345"},
+        {"user", "J"},
+        {"username", "jennierubyjane"},
+        {"caption", "The Original Icon: SUPERSTAR @adidasoriginals #adidassuperstar"},
+        {"link", "https://www.instagram.com/jennierubyjane/p/DVatnY_EYuI/"},
+        {"likes", "3.1M"},
+        {"comments", "50K"},
         {"views", "0"},
-        {"timestamp", "2024-03-17"},
-        {"location", "Los Angeles, California"},
-        {"biography", "Lalisa Manobal / LLOUD"},
-        {"followers", "102,000,000"},
-        {"posts_count", "1,200"}
+        {"timestamp", "2026-03-03"},
+        {"location", "Los Angeles, USA"},
+        {"biography", "@lesyeuxdenini"},
+        {"followers", "89.7M"},
+        {"posts_count", "1,355"}
     };
 
     QMap<QString, QString> paramsStory = {
-        {"user", "LLOUD"},
-        {"username", "wearelloud"},
-        {"fullname", "LLOUD"},
-        {"link", "https://www.instagram.com/stories/wearelloud/"},
-        {"biography", "Official account for LLOUD"},
-        {"followers", "5,000,000"},
-        {"posts_count", "150"}
+        {"user", "J"},
+        {"username", "jennierubyjane"},
+        {"link", "https://www.instagram.com/stories/jennierubyjane/"},
+        {"biography", "@lesyeuxdenini"},
+        {"followers", "89.7M"},
+        {"posts_count", "1,355"}
     };
 };
 

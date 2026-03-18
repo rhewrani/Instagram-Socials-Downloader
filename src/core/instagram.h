@@ -14,7 +14,7 @@ struct contentChild {
         QString mediaUrl;
         QString videoUrl;
         QString id;
-        QString accessabilityCaption;
+        QString accessibilityCaption;
         QString story_timestamp;
         QString story_expires;
         int dimensionHeight;
@@ -29,7 +29,7 @@ struct contentChild {
         QString videoUrl;
         QString location;
         QString caption;
-        QString accessabilityCaption;
+        QString accessibilityCaption;
         QString timestamp;
         QString id;
         QString foreignOwnerUsername; // foreign is used if post is fetched using link
@@ -38,10 +38,8 @@ struct contentChild {
         QString foreignOwnerId;
         bool foreignOwnerIsVerified = false;
         bool isNew = false;
-        int originalDimensionHeight = 0; // todo: Check whether this is needed
-        int originalDimensionWidth = 0; // todo: Check whether this is needed
-        int videoUrlHeight = 0; // todo: Might be able to delete Height/Width for video since it's unused
-        int videoUrlWidth = 0;
+        int originalDimensionHeight = 0;
+        int originalDimensionWidth = 0;
         int videoViewCount = 0;
         int likeCount = 0;
         int commentCount = 0;

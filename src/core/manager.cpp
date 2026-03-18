@@ -205,7 +205,7 @@ bool Manager::saveMediaVideo(const QString &videoUrl, const QString &path)
     QNetworkRequest request((QUrl(videoUrl)));
     QNetworkReply *reply = networkManager.get(request);
 
-    QObject::connect(reply, &QNetworkReply::finished, [reply, fullPath]() {
+    QObject::connect(reply, &QNetworkReply::finished, [reply, fullPath, this]() {
         if (reply->error() == QNetworkReply::NoError) {
             QFile file(fullPath);
             if (file.open(QIODevice::WriteOnly)) {
@@ -213,7 +213,7 @@ bool Manager::saveMediaVideo(const QString &videoUrl, const QString &path)
                 file.close();
             }
         } else {
-            qDebug() << "Video download error:" << reply->errorString();
+            log("Video download error:" + reply->errorString(), true);
         }
         reply->deleteLater();
     });
@@ -364,13 +364,11 @@ void Manager::InitInstagram()
         }
     });
     connect(instagram, &Instagram::signal_storyFetched, this, [this](const QString &username, bool isAutoFetch) {
-        qDebug() << "signal_storyFetched" << username << isAutoFetch;
         if (m_storyCache.contains(username)) {
 
             if (!isAutoFetch) {
                 mainWindow->displayNodeContent(&m_storyCache[username]);
             }
-            qDebug() << "toggleStoryButton" << username;
             mainWindow->toggleStoryButton(username);
 
         }
