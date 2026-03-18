@@ -64,7 +64,7 @@ QMap<QString, QString> texts_en = {
     {"PRFL_USER", "Username"},
     {"PRFL_NAME", "Fullname"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Username (without @), e.g. lalalalisa_m"},
+    {"PRFL_PLCH", "Username (without @), e.g. jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "Profile already saved! Please delete the exisisting profile or search for a different profile."}
 };
 
@@ -132,7 +132,7 @@ QMap<QString, QString> texts_de = {
     {"PRFL_USER", "Benutzername"},
     {"PRFL_NAME", "Vollständiger Name"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Benutzername (ohne @), z. B. lalalalisa_m"},
+    {"PRFL_PLCH", "Benutzername (ohne @), z. B. jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "Profil bereits gespeichert! Bitte lösche das vorhandene Profil oder suche nach einem anderen."}
 
 };
@@ -201,7 +201,7 @@ QMap<QString, QString> texts_da = {
     {"PRFL_USER", "Brugernavn"},
     {"PRFL_NAME", "Fulde navn"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Brugernavn (uden @), f.eks. lalalalisa_m"},
+    {"PRFL_PLCH", "Brugernavn (uden @), f.eks. jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "Profilen er allerede gemt! Slet venligst den eksisterende profil eller søg efter en anden profil."}
 
 };
@@ -270,7 +270,7 @@ QMap<QString, QString> texts_nl = {
     {"PRFL_USER", "Gebruikersnaam"},
     {"PRFL_NAME", "Volledige naam"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Gebruikersnaam (zonder @), bijv. lalalalisa_m"},
+    {"PRFL_PLCH", "Gebruikersnaam (zonder @), bijv. jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "Profiel is al opgeslagen! Verwijder het bestaande profiel of zoek naar een ander profiel."}
 
 };
@@ -339,7 +339,7 @@ QMap<QString, QString> texts_fr = {
     {"PRFL_USER", "Nom d'utilisateur"},
     {"PRFL_NAME", "Nom complet"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Nom d'utilisateur (sans @), par exemple lalalalisa_m"},
+    {"PRFL_PLCH", "Nom d'utilisateur (sans @), par exemple jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "Profil déjà enregistré ! Veuillez supprimer le profil existant ou en rechercher un autre."}
 
 };
@@ -408,7 +408,7 @@ QMap<QString, QString> texts_es = {
     {"PRFL_USER", "Nombre de usuario"},
     {"PRFL_NAME", "Nombre completo"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Nombre de usuario (sin @), ej. lalalalisa_m"},
+    {"PRFL_PLCH", "Nombre de usuario (sin @), ej. jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "¡El perfil ya está guardado! Por favor, elimina el perfil existente o busca uno diferente."}
 
 };
@@ -477,7 +477,7 @@ QMap<QString, QString> texts_pt = {
     {"PRFL_USER", "Nome de utilizador"},
     {"PRFL_NAME", "Nome completo"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Nome de utilizador (sem @), ex: lalalalisa_m"},
+    {"PRFL_PLCH", "Nome de utilizador (sem @), ex: jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "Perfil já salvo! Por favor, exclua o perfil existente ou procure por um perfil diferente."}
 
 };
@@ -546,7 +546,7 @@ QMap<QString, QString> texts_it = {
     {"PRFL_USER", "Nome utente"},
     {"PRFL_NAME", "Nome completo"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "Nome utente (senza @), es. lalalalisa_m"},
+    {"PRFL_PLCH", "Nome utente (senza @), es. jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "Profilo già salvato! Elimina il profilo esistente o cercane uno diverso."}
 
 };
@@ -615,7 +615,7 @@ QMap<QString, QString> texts_zh = {
     {"PRFL_USER", "用户名"},
     {"PRFL_NAME", "全名"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "用户名（不带 @），例如 lalalalisa_m"},
+    {"PRFL_PLCH", "用户名（不带 @），例如 jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "该主页已保存！请删除现有主页或搜索其他主页。"}
 };
 
@@ -683,7 +683,7 @@ QMap<QString, QString> texts_jp = {
     {"PRFL_USER", "ユーザー名"},
     {"PRFL_NAME", "フルネーム"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "ユーザー名（@なし）、例：lalalalisa_m"},
+    {"PRFL_PLCH", "ユーザー名（@なし）、例：jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "このプロフィールは既に保存されています。既存のプロフィールを削除するか、別のプロフィールを検索してください。"}
 };
 
@@ -751,7 +751,7 @@ QMap<QString, QString> texts_kr = {
     {"PRFL_USER", "사용자 이름"},
     {"PRFL_NAME", "전체 이름"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "사용자 이름(@ 제외), 예: lalalalisa_m"},
+    {"PRFL_PLCH", "사용자 이름(@ 제외), 예: jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "이미 저장된 프로필입니다! 기존 프로필을 삭제하거나 다른 프로필을 검색해 주세요."}
 };
 
@@ -820,7 +820,7 @@ QMap<QString, QString> texts_th = {
     {"PRFL_USER", "ชื่อผู้ใช้"},
     {"PRFL_NAME", "ชื่อเต็ม"},
     {"PRFL_ID", "ID"},
-    {"PRFL_PLCH", "ชื่อผู้ใช้ (ไม่มี @) เช่น lalalalisa_m"},
+    {"PRFL_PLCH", "ชื่อผู้ใช้ (ไม่มี @) เช่น jennierubyjane"},
     {"PRFL_ALRDY_SAVED", "บันทึกโปรไฟล์นี้แล้ว! โปรดลบโปรไฟล์ที่มีอยู่หรือค้นหาโปรไฟล์อื่น"}
 };
 

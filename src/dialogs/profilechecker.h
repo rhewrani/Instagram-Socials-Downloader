@@ -8,6 +8,12 @@ namespace Ui {
 class ProfileChecker;
 }
 
+/**
+ * @brief The ProfileChecker class provides a UI to validate and add new Instagram profiles.
+ * 
+ * It takes a username, fetches its public data using the Instagram API, and 
+ * shows the result before the user commits to adding it to their bookmarks.
+ */
 class ProfileChecker : public QDialog
 {
     Q_OBJECT
@@ -16,8 +22,10 @@ public:
     explicit ProfileChecker(Manager *managerRef, QList<Instagram::userData> &profilesEditRef, QWidget *parent = nullptr);
     ~ProfileChecker();
 
+    //  @brief Shows the checker dialog and clears any previous state.
     void pc_show();
 
+    //  @brief Callback triggered when the Instagram API returns profile info.
     void on_receivedProfileInfo(Instagram::userData *user);
 
 protected:

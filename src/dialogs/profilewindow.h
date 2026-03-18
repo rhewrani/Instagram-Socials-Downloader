@@ -8,6 +8,12 @@ namespace Ui {
 class ProfileWindow;
 }
 
+/**
+ * @brief The ProfileWindow class allows users to manage their bookmarked profiles.
+ * 
+ * Users can add, remove, and reorder profiles. It uses ProfileChecker to 
+ * validate and fetch new profile details before adding them.
+ */
 class ProfileWindow : public QDialog
 {
     Q_OBJECT
@@ -18,6 +24,7 @@ public:
     
     void closeEvent(QCloseEvent *event) override;
 
+    /** @brief Shows the profile management window in its current state. */
     void pw_show();
 
 protected:
@@ -33,6 +40,7 @@ private slots:
     void on_BTN_DEL_clicked();
 
 signals:
+    /** @brief Emitted when the profile list has been modified and saved. */
     void signal_updateProfileList(const QList<Instagram::userData> &profilesEdit);
 
 private:

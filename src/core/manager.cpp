@@ -4,6 +4,7 @@
 #include <qdebug.h>
 #include <qjsonobject.h>
 
+// Constructor: Initializes the manager, file agent, and connects initial logic.
 Manager::Manager(MainWindow *mainWindowRef, QObject *parent)
     : QObject{parent}
     , mainWindow{mainWindowRef}
@@ -19,12 +20,14 @@ Manager::~Manager()
 
 }
 
+// Prints a debug message to both console and the application logger.
 void Manager::debug(const QString &message)
 {
     qDebug() << message;
     Logger::instance()->debug(message);
 }
 
+// Logs a message to the file/UI if logging is enabled in settings.
 void Manager::log(const QString &message, bool MessageBox)
 {
     if (settings.bEnableLogging) {
@@ -32,22 +35,26 @@ void Manager::log(const QString &message, bool MessageBox)
     }
 }
 
+// Logs/shows a warning message.
 void Manager::warning(const QString &message, bool MessageBox)
 {
     Logger::instance()->warning(message, MessageBox);
 }
 
+// Logs/shows a critical error message.
 void Manager::critical(const QString &message, bool MessageBox)
 {
     Logger::instance()->critical(message, MessageBox);
 }
 
+// Translates a key based on the current application language setting.
 QString Manager::t(const QString &key)
 {
     
     return translate(key, settings.intLanguage);
 }
 
+// Saves the list of profiles to a JSON file.
 bool Manager::saveProfiles(QList<Instagram::userData> profilesEdit)
 {
     for (int i = 0; i < profilesEdit.size(); ++i) {
@@ -92,6 +99,7 @@ bool Manager::saveProfiles(QList<Instagram::userData> profilesEdit)
     return true;
 }
 
+// Retrieves a pointer to a profile structure by its username.
 Instagram::userData* Manager::getProfilePtrFromName(const QString &username)
 {
     for (auto &profile : profiles) {
@@ -102,6 +110,7 @@ Instagram::userData* Manager::getProfilePtrFromName(const QString &username)
     return nullptr;
 }
 
+// Saves the application settings to a JSON file.
 bool Manager::saveSettings(appSettings settingsStruct, bool restart)
 {
     if (!restart) {
@@ -170,6 +179,7 @@ bool Manager::saveSettings(appSettings settingsStruct, bool restart)
 }
 
 
+// Saves a pixmap to the given path, creating the directory if it doesn't exist.
 bool Manager::saveMedia(const QPixmap &pixmap, const QString &path)
 {
     if (pixmap.isNull()) return false;
@@ -188,6 +198,7 @@ bool Manager::saveMedia(const QPixmap &pixmap, const QString &path)
 
 }
 
+// Downloads and saves a video to the given path asynchronously.
 bool Manager::saveMediaVideo(const QString &videoUrl, const QString &path)
 {
     if (videoUrl.isEmpty() || path.isEmpty()) return false;
@@ -220,6 +231,7 @@ bool Manager::saveMediaVideo(const QString &videoUrl, const QString &path)
     return true;
 }
 
+// Loads a pixmap from a URL, using cache if available. Scaling is applied before callback.
 void Manager::loadPixmap(const QString &url, const QString &id, int w, int h,
                          std::function<void(const QPixmap&)> callback)
 {
@@ -245,6 +257,7 @@ void Manager::loadPixmap(const QString &url, const QString &id, int w, int h,
             });
 }
 
+// Generates customized text using a preset and placeholders from the media node.
 void Manager::generateCopyPasteText(const QString &presetKey, QTextEdit *target, const QMap<QString, QString> &params)
 {
     if (!target) return;
@@ -276,6 +289,7 @@ void Manager::generateCopyPasteText(const QString &presetKey, QTextEdit *target,
     target->setPlainText(result);
 }
 
+// Generates text from a template string by replacing placeholders like {caption} or {shortcode}.
 void Manager::generateCopyPasteTextString(const QString &templateText, QTextEdit *target, const QMap<QString, QString> &params, bool enableQuoting)
 {
     if (!target || templateText.isEmpty()) return;
@@ -302,7 +316,8 @@ void Manager::generateCopyPasteTextString(const QString &templateText, QTextEdit
 
 
 
-void Manager::instagram_GET_userInfo(const QString &username, bool isProfileChecker) // by name
+// Triggers an Instagram API request to fetch user profile information.
+void Manager::instagram_GET_userInfo(const QString &username, bool isProfileChecker)
 {
     Instagram::userData *user;
     if (isProfileChecker) {
@@ -314,11 +329,13 @@ void Manager::instagram_GET_userInfo(const QString &username, bool isProfileChec
     instagram->GET_userInfo(user, isProfileChecker);
 }
 
+// Triggers an Instagram API request to fetch a user's feed.
 void Manager::instagram_GET_userFeed(const QString &username)
 {
     instagram->GET_userFeed(getProfilePtrFromName(username));
 }
 
+// Fetches details for a specific post using its shortcode, using cache if available.
 void Manager::instagram_GET_PostFromShortcode(const QString &shortcode)
 {
     if (m_postCache.contains(shortcode)) {
@@ -329,6 +346,7 @@ void Manager::instagram_GET_PostFromShortcode(const QString &shortcode)
     instagram->GET_post(shortcode, m_postCache);
 }
 
+// Fetches stories for a given username, using cache if available.
 void Manager::instagram_GET_Story(const QString &username, bool isAutoFetch)
 {
     if (m_storyCache.contains(username) && !isAutoFetch) {
@@ -340,6 +358,7 @@ void Manager::instagram_GET_Story(const QString &username, bool isAutoFetch)
 }
 
 
+// Core initialization: loads settings and profiles, then sets up the Instagram handler.
 void Manager::Init()
 {
     GetSettings();
@@ -348,6 +367,7 @@ void Manager::Init()
     mainWindow->setProfileCombobox(profiles, false);
 }
 
+// Initializes the Instagram API handler and connects all necessary UI signals.
 void Manager::InitInstagram()
 {
     if (!profiles.isEmpty()) {
@@ -387,11 +407,13 @@ void Manager::cachePixmap(const QString &id, const QPixmap &pixmap)
         m_imageCache[id] = pixmap;
 }
 
+// Returns true if a pixmap with the given ID is present in the cache.
 bool Manager::isPixmapCached(const QString &id) const
 {
     return m_imageCache.contains(id);
 }
 
+// Reads the profiles.json file and populates the internal profile list.
 void Manager::GetProfiles()
 {
     QFile file("profiles.json");
@@ -428,6 +450,7 @@ void Manager::GetProfiles()
 }
 
 
+// Reads settings.json and populates the appSettings structure.
 void Manager::GetSettings()
 {
     QFile file("settings.json");

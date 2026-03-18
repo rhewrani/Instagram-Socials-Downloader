@@ -16,23 +16,44 @@ namespace Ui {
 class MainWindow;
 }
 
+/**
+ * @brief The MainWindow class is the primary user interface of the application.
+ * 
+ * It manages the profile feed display, media preview, download triggers, 
+ * and various settings/profile dialogs.
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    //  @brief Updates the profile metadata (followers, avatar, etc.) in the UI.
     void updateProfileInfoUI(Instagram::userData *user, bool loadStory = false);
+
+    //  @brief Updates the media feed list in the UI for the given user.
     void updateProfileFeedUI(Instagram::userData *user);
+    //  @brief Populates the user selection combobox.
     void setProfileCombobox(const QList<Instagram::userData> &profiles, bool triggerIndexChanged = false, int selectedIndex = 0);
+
+    //  @brief Displays detailed content for a selected media node.
     void displayNodeContent(Instagram::contentNode *node);
+
+    //  @brief Toggles the visibility/state of the story button for a user.
     void toggleStoryButton(const QString &username);
+
+    //  @brief Refreshes the generated template text (for captions).
     void updateGeneratedText();
+
+    //  @brief Resets the preview widgets to their default empty state.
     void resetPreviewWidget();
+
+    //  @brief Performs the initial profile load on app startup.
     void initialLoad();
     void loadEmpty();
     void resetProfileInfoUI();
 
+    //  @brief Displays a non-intrusive toast notification to the user.
     void showToast(const QString &message, ToastType type = Info, int durationMs = 3000, bool isVideo = false);
 
     BlockingOverlay *overlay;

@@ -8,6 +8,7 @@
 
 
 
+// Core translation function. Returns the localized string for a given key and language index.
 QString translate(const QString &key, int lang)
 {
     switch (lang) {
@@ -40,6 +41,7 @@ QString translate(const QString &key, int lang)
     }
 }
 
+// Formats a number into a human-readable string (e.g., 1.2K, 3.4M).
 QString formatNumber(int number) {
 
     if (number < 1000) {
@@ -76,6 +78,7 @@ QString formatNumber(int number) {
     }
 }
 
+// Formats a Unix timestamp into a readable string with English date ordinals (st, nd, rd, th).
 QString formatTimestampWithOrdinal(qint64 timestamp)
 {
     QDateTime dt = QDateTime::fromSecsSinceEpoch(timestamp, Qt::UTC);
@@ -103,6 +106,7 @@ QString formatTimestampWithOrdinal(qint64 timestamp)
         .arg(time);
 }
 
+// Returns a date format string based on the provided index and usage (backup or display).
 QString getDateFormat(int format, bool backupFormat)
 {
     if (backupFormat) {
@@ -123,6 +127,7 @@ QString getDateFormat(int format, bool backupFormat)
 }
 
 
+// Dynamically adjusts a label's font size so the text fits within its bounds.
 void fitTextToLabel(QLabel *target, const QString &text)
 {
     if (!target) return;
@@ -132,10 +137,8 @@ void fitTextToLabel(QLabel *target, const QString &text)
     const int originalFontSize = font.pointSize();
     const int minFontSize = 5;
 
-
     font.setPointSize(originalFontSize);
     target->setFont(font);
-
 
     QFontMetrics fm(font);
     QRect boundingRect = fm.boundingRect(target->rect(), target->wordWrap() ? Qt::TextWordWrap : 0, text);
@@ -164,6 +167,7 @@ void fitTextToLabel(QLabel *target, const QString &text)
     target->setFont(font);
 }
 
+// Dynamically adjusts a button's font size so the text fits within its available width.
 void fitTextToButton(QPushButton *button, const QString &text)
 {
     if (!button || text.isEmpty()) return;
@@ -212,6 +216,7 @@ void fitTextToButton(QPushButton *button, const QString &text)
     button->setFont(font);
 }
 
+// Sets a label's text with optional emoji images before or after the text.
 void setLabelTextWithEmoji(QLabel *label, const QString &text,
                            const QString &emojiBefore,
                            const QString &emojiAfter)
@@ -240,6 +245,7 @@ void setLabelTextWithEmoji(QLabel *label, const QString &text,
     label->setText(richText);
 }
 
+// Extracts an Instagram username from a stories URL (e.g., https://www.instagram.com/stories/username/).
 QString extractUsernameFromStoriesUrl(const QString &url)
 {
     QUrl qurl(url.trimmed());
@@ -271,6 +277,7 @@ QString extractUsernameFromStoriesUrl(const QString &url)
     return remainder;
 }
 
+// Extracts the full name from an Instagram accessibility caption (ACPT).
 QString extractFullnameFromACPT(const QString &acpt)
 {
     QRegularExpression regex("^Photo by ([^\\s]+)");
@@ -281,6 +288,7 @@ QString extractFullnameFromACPT(const QString &acpt)
     return QString();
 }
 
+// Validates and extracts the 11-character shortcode from various Instagram URL formats.
 QString extractInstagramShortcode(const QString &url, InstagramLinkError &error)
 {
     error = InstagramLinkError::NoError;
@@ -371,6 +379,7 @@ QString extractInstagramShortcode(const QString &url, InstagramLinkError &error)
     return shortcode;
 }
 
+// Positions one label next to another (left or right) based on its current text width.
 void setPixmapToText(QLabel *textLabel, QLabel *pixmapLabel, Position position, int offset, bool adjustY)
 {
     if (!textLabel || !pixmapLabel) return;
@@ -402,6 +411,7 @@ void setPixmapToText(QLabel *textLabel, QLabel *pixmapLabel, Position position, 
     }
 }
 
+// Re-formats text to fit a maximum width while adding a prefix (e.g., "> ") to every line.
 QString reflowTextWithPrefix(const QString &text, const QString &prefix, const QFontMetrics &fm, int maxWidth)
 {
     if (text.isEmpty() || maxWidth <= 0) {
@@ -441,12 +451,14 @@ QString reflowTextWithPrefix(const QString &text, const QString &prefix, const Q
 }
 
 
+// Singleton accessor for the Logger class.
 Logger* Logger::instance()
 {
     static Logger instance;
     return &instance;
 }
 
+// Constructor: Opens the log file for appending and writes a session start marker.
 Logger::Logger()
 {
     logFile.setFileName("log.txt");
@@ -461,32 +473,38 @@ Logger::Logger()
     logStream.flush();
 }
 
+// Sets the parent widget for message boxes and the global date format.
 void Logger::setParentWidget(QWidget *parent, int dateFormat)
 {
     messageParent = parent;
     intDateFormat = dateFormat;
 }
 
+// Logs an informational message.
 void Logger::log(const QString &message, bool MB, QWidget *parent)
 {
     logMessage(LogLevel::Info, message, MB);
 }
 
+// Logs a warning message.
 void Logger::warning(const QString &message, bool MB, QWidget *parent)
 {
     logMessage(LogLevel::Warning, message, MB, parent);
 }
 
+// Logs a critical error message.
 void Logger::critical(const QString &message, bool MB, QWidget *parent)
 {
     logMessage(LogLevel::Critical, message, MB, parent);
 }
 
+// Logs a debug message (always written to file/console, never shows message box).
 void Logger::debug(const QString &message)
 {
     logMessage(LogLevel::Debug, message, false);
 }
 
+// Formats the message and writes it to the log file, optionally showing a message box.
 void Logger::logMessage(LogLevel level, const QString &message, bool MessageBox, QWidget *parent)
 {
     QString timestamp = QDateTime::currentDateTime().toString(getDateFormat(intDateFormat));

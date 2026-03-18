@@ -150,7 +150,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </property>
     <property name="text">
      <string>Limited functionality due to Instagram restrictions:
-Instagram imposes certain limitations that affect what content can be accessed through third-party tools. Specifically, without a valid session ID, the program cannot fetch Instagram Stories or posts marked as +18 (which includes some of Lisa’s posts). If you need access to this content, you can provide a valid session ID in the settings.
+Instagram imposes certain limitations that affect what content can be accessed through third-party tools. Specifically, without a valid session ID, the program cannot fetch Instagram Stories or posts marked as +18. If you need access to this content, you can provide a valid session ID in the settings.
 
 That being said, the program works fully and remains highly usable even without a session ID and you’ll still be able to access most features without issue.
 

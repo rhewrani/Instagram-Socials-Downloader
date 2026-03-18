@@ -4,12 +4,19 @@
 #include <QObject>
 #include "fileagent.h"
 
+/**
+ * @brief The Instagram class handles interaction with the Instagram API.
+ * 
+ * This class provides methods to fetch user information, profile feeds, individual posts, and stories.
+ * It manages network requests and parses JSON responses from Instagram's endpoints.
+ */
 class Instagram : public QObject
 {
     Q_OBJECT
 public:
 
-struct contentChild {
+    // @brief Represents a single child item within an Instagram post (e.g., in a sidecar).
+    struct contentChild {
         QString type = "Image"; // Default for child
         QString mediaUrl;
         QString videoUrl;
@@ -22,6 +29,7 @@ struct contentChild {
         int childIndex;
     };
 
+    // @brief Represents a single node in an Instagram feed (a post, story, etc.).
     struct contentNode {
         QString shortcode;
         QString type = "Image"; // Default for feed node
@@ -44,9 +52,9 @@ struct contentChild {
         int likeCount = 0;
         int commentCount = 0;
         QMap<int, contentChild> children; // Post children, only if type is sidecar
-
     };
 
+    // @brief Holds data for an Instagram user profile.
     struct userData {
         QString username;
         QString fullname;
@@ -73,9 +81,16 @@ struct contentChild {
 
     userData* getUserPtr(int userIndex);
 
+    //@brief Retrieves detailed user information from Instagram.
     void GET_userInfo(userData *user, bool isProfileChecker = false);
+
+    //@brief Fetches the recent feed posts for a user.
     void GET_userFeed(userData *user);
+
+    //@brief Fetches a single post using its shortcode.
     void GET_post(const QString &shortcode, QHash<QString, contentNode> &hash);
+
+    //@brief Fetches the latest stories for a user.
     void GET_story(const QString &username, QHash<QString, contentNode> &hash, bool isAutoFetch);
 
     QString t(const QString &key);

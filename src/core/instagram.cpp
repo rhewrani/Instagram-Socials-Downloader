@@ -1,8 +1,8 @@
 #include "instagram.h"
 #include <QPixmapCache>
-#include <cmath>
 
 
+// Constructor: Initializes the Instagram API handler with net/file agents and user session.
 Instagram::Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkManagerRef, int lang, QString sessionid, userData *initialLoadUser, QObject *parent)
     : QObject{parent}
     , fileAgent{fileAgentRef}
@@ -14,6 +14,7 @@ Instagram::Instagram(FileAgent *fileAgentRef, QNetworkAccessManager &networkMana
 }
 
 
+// Fetches basic profile information for a user using the 'web_profile_info' endpoint.
 void Instagram::GET_userInfo(userData *user, bool isProfileChecker)
 {
     if (!user->allowGetProfileInfo) return;
@@ -78,6 +79,7 @@ void Instagram::GET_userInfo(userData *user, bool isProfileChecker)
     });
 }
 
+// Fetches the user's timeline media feed, using GraphQL and pagination.
 void Instagram::GET_userFeed(userData *user)
 {
     if (!user->allowGetProfileFeed) return;
@@ -208,6 +210,8 @@ void Instagram::GET_userFeed(userData *user)
     });
 }
 
+// Fetches a single post's details using its shortcode.
+// This is also used for "Link" based downloads.
 void Instagram::GET_post(const QString &shortcode, QHash<QString, contentNode> &hash)
 {
 
@@ -307,6 +311,8 @@ void Instagram::GET_post(const QString &shortcode, QHash<QString, contentNode> &
     });
 }
 
+// Fetches the current stories of a user.
+// Requires a valid 'sessionid' cookie as story access is restricted to logged-in users.
 void Instagram::GET_story(const QString &username, QHash<QString, contentNode> &hash, bool isAutoFetch)
 {
     if (settingsSessionid.isEmpty()) return;
@@ -374,17 +380,20 @@ void Instagram::GET_story(const QString &username, QHash<QString, contentNode> &
     });
 }
 
+// Internal helper for localized strings.
 QString Instagram::t(const QString &key)
 {
     return translate(key, settingsLanguage);
 }
 
 
+// Initializes the Instagram handler and starts session data generation.
 void Instagram::Init(userData *initialLoadUser)
 {
     generateSessionData(true, initialLoadUser);
 }
 
+// Parses HTML content to find specific JSON entries.
 QJsonObject Instagram::getObjectFromEntries(const QString &name, const QString &data)
 {
     QRegularExpression regex(R"(\[")" + QRegularExpression::escape(name) + R"(",.*?,(\{.*?\}),\d+\])");
@@ -400,6 +409,7 @@ QJsonObject Instagram::getObjectFromEntries(const QString &name, const QString &
     return QJsonObject(); // Return empty object if nothing is found
 }
 
+// Recursively searches a JSON array for story/reels media arrays.
 QJsonObject Instagram::findReelsInArray(const QJsonArray &arr)
 {
     for (const QJsonValue &elem : arr) {
@@ -416,6 +426,7 @@ QJsonObject Instagram::findReelsInArray(const QJsonArray &arr)
     return QJsonObject();
 }
 
+// Recursively searches a JSON object for story/reels media objects.
 QJsonObject Instagram::findReelsInObject(const QJsonObject &obj)
 {
     if (obj.contains("xdt_api__v1__feed__reels_media")) {
@@ -437,6 +448,7 @@ QJsonObject Instagram::findReelsInObject(const QJsonObject &obj)
     return QJsonObject();
 }
 
+// Scans HTML script tags for application/json data containing story info.
 QJsonObject Instagram::extractReelsMedia(const QString &htmlContent)
 {
     QRegularExpression scriptRegex(
@@ -473,9 +485,10 @@ QJsonObject Instagram::extractReelsMedia(const QString &htmlContent)
 }
 
 
+// Requests a public profile to harvest CSRF tokens, App IDs, and cookies.
 void Instagram::generateSessionData(int isInit, userData *initialLoadUser)
 {
-    QUrl url("https://www.instagram.com/lalalalisa_m/");
+    QUrl url("https://www.instagram.com/instagram/");
     QNetworkRequest request(url);
     setupHeaders(request, 0);
 
@@ -533,6 +546,7 @@ void Instagram::generateSessionData(int isInit, userData *initialLoadUser)
 
 }
 
+// Internal helper to set necessary headers for Instagram API calls.
 void Instagram::setupHeaders(QNetworkRequest &request, int headerSet)
 {
     if (headerSet == 0) { // Common headers
@@ -577,6 +591,7 @@ void Instagram::setupHeaders(QNetworkRequest &request, int headerSet)
     return;
 }
 
+// Iterates through a GraphQL feed response and extracts the feed data.
 void Instagram::extractFeedData(QJsonArray &arr, userData *user)
 {
     for (const auto &feedEdgeValue : arr) {
@@ -703,6 +718,8 @@ void Instagram::extractFeedData(QJsonArray &arr, userData *user)
     emit signal_updateMainPageProfileFeed(user);
 }
 
+// Parses a GraphQL post object into a simplified contentNode structure.
+// Handles different media types like Video, Image, and Sidecar (carousel).
 Instagram::contentNode Instagram::extractPostData(QJsonObject &postObj)
 {
     contentNode post;
@@ -796,6 +813,7 @@ Instagram::contentNode Instagram::extractPostData(QJsonObject &postObj)
 
 }
 
+// Parses story objects (from HTML) into a contentNode for story viewing.
 Instagram::contentNode Instagram::extractStoryData(const QJsonObject &storyObj)
 {
     contentNode story;
@@ -850,6 +868,7 @@ Instagram::contentNode Instagram::extractStoryData(const QJsonObject &storyObj)
     return story;
 }
 
+// Basic error handling for network replies. Checks for HTTP 200 and network errors.
 bool Instagram::checkResponse(QNetworkReply *reply, const QString &origin, int currentAttempt)
 {
     if (reply->error()) {
@@ -875,11 +894,13 @@ bool Instagram::checkResponse(QNetworkReply *reply, const QString &origin, int c
     return true;
 }
 
+// Constructor for the Feed List Model, used by the UI's main feed view.
 FeedListModel::FeedListModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
+// Returns the number of posts in the model.
 int FeedListModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -887,6 +908,7 @@ int FeedListModel::rowCount(const QModelIndex &parent) const
     return m_feed.size();
 }
 
+// Returns data for a specific row and role (video status, new status, or image pixmap).
 QVariant FeedListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= m_feed.size())
@@ -916,6 +938,7 @@ QHash<int, QByteArray> FeedListModel::roleNames() const
     };
 }
 
+// Clears all posts and pixmaps from the model.
 void FeedListModel::clear()
 {
     if (m_feed.isEmpty()) return;
@@ -925,6 +948,7 @@ void FeedListModel::clear()
     endResetModel();
 }
 
+// Resets the model with a new set of feed posts.
 void FeedListModel::setFeed(const QMap<int, Instagram::contentNode> &feed)
 {
     beginResetModel();
@@ -933,6 +957,7 @@ void FeedListModel::setFeed(const QMap<int, Instagram::contentNode> &feed)
     endResetModel();
 }
 
+// Appends new posts to the end of the existing feed.
 void FeedListModel::appendPosts(const QList<Instagram::contentNode> &newPosts)
 {
     if (newPosts.isEmpty()) return;
@@ -944,6 +969,7 @@ void FeedListModel::appendPosts(const QList<Instagram::contentNode> &newPosts)
     endInsertRows();
 }
 
+// Stores a downloaded pixmap for a specific row and notifies the view of the change.
 void FeedListModel::setPixmapForRow(int row, const QPixmap &pixmap)
 {
     if (row < 0 || row >= m_feed.size())
@@ -958,11 +984,13 @@ void FeedListModel::setPixmapForRow(int row, const QPixmap &pixmap)
     emit dataChanged(idx, idx, {Qt::DecorationRole});
 }
 
+// Checks if a pixmap has already been loaded for a specific row.
 bool FeedListModel::hasPixmapForRow(int row) const
 {
     return row >= 0 && row < m_pixmaps.size() && !m_pixmaps[row].isNull();
 }
 
+// Constructor for the Child Media Model, used for sidecar post viewing.
 ChildMediaModel::ChildMediaModel(QObject *parent)
     : QAbstractListModel(parent)
 {
@@ -1110,6 +1138,7 @@ QSize VideoOverlayDelegate::sizeHint(const QStyleOptionViewItem &option, const Q
     return QSize(170, 230);
 }
 
+// Resets all user-specific data and flags to their initial state.
 void Instagram::userData::clear()
 {
 
@@ -1127,6 +1156,7 @@ void Instagram::userData::clear()
     followersCount = 0;
 }
 
+// Debug helper to print the current state of userData to the logger.
 void Instagram::userData::dump()
 {
     Logger::instance()->debug("USER DATA DUMP FOR " + username);

@@ -19,6 +19,7 @@ ProfileWindow::~ProfileWindow()
     delete ui;
 }
 
+// Overrides close event to save changes if the profile list was modified.
 void ProfileWindow::closeEvent(QCloseEvent *event)
 {
     pw_checkDataChanged();
@@ -108,17 +109,20 @@ void ProfileWindow::InitTitleBar() {
     setLayout(mainLayout);
 }
 
+// Initializes language-specific texts for UI elements.
 void ProfileWindow::InitLang() {
     ui->LBL_TTL->setText(_("PRFL_TTL"));
     ui->LBL_INFO->setText(_("PRFL_INFO"));
 }
 
+// Populates the internal edit list with current profiles and updates the view.
 void ProfileWindow::pw_setData()
 {
     profilesEdit = profiles;
     pw_updateList();
 }
 
+// Shows the profile window and updates its data.
 void ProfileWindow::pw_show()
 {
     pw_setData();

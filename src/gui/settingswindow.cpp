@@ -18,6 +18,7 @@ Settingswindow::~Settingswindow()
     delete ui;
 }
 
+// Overrides close event to prompt for unsaved changes before exiting.
 void Settingswindow::closeEvent(QCloseEvent *event)
 {
     checkVariables();
@@ -163,6 +164,7 @@ void Settingswindow::sw_setData()
     saveButtonUsed = false;
 }
 
+// Compares current form data with saved settings to detect changes and restart requirements.
 void Settingswindow::checkVariables()
 {
     restartRequired = false;
@@ -280,6 +282,7 @@ void Settingswindow::on_BTN_RESET_clicked()
 }
 
 
+// Handles the 'Save' button click, triggers variable check, and restart confirmation.
 void Settingswindow::on_BTN_SAVE_clicked()
 {
     checkVariables();

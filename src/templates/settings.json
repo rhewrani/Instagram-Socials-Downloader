@@ -14,8 +14,8 @@
 		"isFirstOpen": true
     },
     "text_presets": {
-        "instagram_post": "{user} shared a post on Instagram!\n{caption}\n\n{link}",
-        "instagram_story": "{user} shared a story on Instagram!\n\n{link}"
+        "instagram_post": "# POST SUMMARY: @{user}\n\n### 👤 USER PROFILE\n**Username:** {username}\n**Biography:** {biography}\n**Followers:** {followers} | **Posts:** {posts_count}\n\n### 📍 POST METADATA\n**Location:** {location}\n**Timestamp:** {timestamp}\n**Link:** {link}\n\n### 📈 ENGAGEMENT\n**Likes:** {likes}\n**Comments:** {comments}\n**Views:** {views}\n\n### 📝 CAPTION\n{caption}",
+        "instagram_story": "# STORY SUMMARY: @{user}\n\n### 👤 USER PROFILE\n**Username:** {username}\n**Biography:** {biography}\n**Followers:** {followers} | **Posts:** {posts_count}\n\n**Link:** {link}"
     },
     "user": {
         "language": 0

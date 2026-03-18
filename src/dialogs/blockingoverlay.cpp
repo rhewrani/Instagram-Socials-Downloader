@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 #include <qapplication.h>
 
+//  @brief Constructor: Creates a blocking overlay with the given parent and message.
 BlockingOverlay::BlockingOverlay(QWidget *parent, const QString &text)
     : QDialog(parent, Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint)
     , m_label(new QLabel(text, this))
@@ -37,16 +38,19 @@ BlockingOverlay::BlockingOverlay(QWidget *parent, const QString &text)
 
 }
 
+//  @brief Updates the message displayed on the overlay.
 void BlockingOverlay::setMessage(const QString &text)
 {
     m_label->setText(text);
 }
 
+//  @brief Overrides the close event to prevent the dialog from being closed by the user.
 void BlockingOverlay::closeEvent(QCloseEvent *event)
 {
     event->ignore();
 }
 
+//  @brief Overrides the key press event to prevent the dialog from being closed by the user.
 void BlockingOverlay::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {

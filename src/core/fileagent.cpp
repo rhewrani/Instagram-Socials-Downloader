@@ -4,6 +4,7 @@ FileAgent::FileAgent(QObject *parent)
     : QObject{parent}
 {}
 
+// Opens a file in the specified mode (ReadOnly by default).
 void FileAgent::File_Open(QFile &f, int mode)
 {
     auto device = QIODevice::ReadOnly;
@@ -18,6 +19,7 @@ void FileAgent::File_Open(QFile &f, int mode)
     return;
 }
 
+// Reads a file's content and parses it as a QJsonObject.
 QJsonObject FileAgent::File_GetDataObject(QFile &File)
 {
     if (!File.exists()) {
@@ -50,6 +52,7 @@ QJsonObject FileAgent::File_GetDataObject(QFile &File)
     return doc.object();
 }
 
+// Reads a file's content and parses it as a QJsonDocument.
 QJsonDocument FileAgent::File_GetDataDocument(QFile &File)
 {
     if (!File.exists()) {

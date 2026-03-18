@@ -15,6 +15,12 @@
 
 class MainWindow;
 
+/**
+ * @brief The Manager class acts as the central controller for the application.
+ * 
+ * It manages settings, profiles, media saving, and coordinates between the 
+ * MainWindow and the Instagram API handler.
+ */
 class Manager : public QObject
 {
     Q_OBJECT
@@ -31,6 +37,9 @@ public:
 
     QNetworkAccessManager networkManager;
 
+    /**
+     * @brief Structure to store application-wide settings.
+     */
     struct appSettings {
         bool bEnableLogging = false;
         bool bOpenFileExplorerOnSave = true;
@@ -48,24 +57,43 @@ public:
         appSettings(const appSettings &other) = default;
     };
 
+    //  @brief Loads application settings from persistent storage (settings.ini).
     void GetSettings();
+
+    //  @brief Retrieves a reference to the current application settings.
     appSettings& getSettingsStruct() { return settings; }
+
+    //  @brief Saves the given settings to persistent storage.
     bool saveSettings(appSettings settings, bool restart);
     
+    //  @brief Loads bookmarked user profiles from storage (profiles.json).
     void GetProfiles();
+
+    //  @brief Retrieves a reference to the list of loaded user profiles.
     QList<Instagram::userData>& getProfiles() { return profiles; }
+
+    //  @brief Saves the current list of profiles to storage.
     bool saveProfiles(QList<Instagram::userData> profiles);
+
+    //  @brief Finds a profile in the loaded list by its username.
     Instagram::userData* getProfilePtrFromName(const QString &username);
 
+    //  @brief Saves a pixmap (image) to a specified local path.
     bool saveMedia(const QPixmap &pixmap, const QString &path);
+
+    //  @brief Downloads and saves a video from a URL to a local path.
     bool saveMediaVideo(const QString &videoUrl, const QString &path);
 
+    //  @brief Asynchronously loads an image from a URL, using cache if available.
     void loadPixmap(const QString &url, const QString &id, int w, int h,
                     std::function<void(const QPixmap&)> callback);
 
+    //  @brief Generates copy-paste text from a preset.
     void generateCopyPasteText(const QString &presetKey, QTextEdit *target, const QMap<QString, QString> &params);
+    //  @brief Generates copy-paste text from a template.
     void generateCopyPasteTextString(const QString &templateText, QTextEdit *target, const QMap<QString, QString> &params, bool enableQuoting = true);
 
+    //  @brief Returns a pointer to the Instagram handler.
     Instagram* getInstagram() { return instagram; }
 
     /* INSTAGRAM LOGIC */
@@ -111,10 +139,6 @@ public:
     
     
     appSettings settings;
-    Instagram::userData *lisaStruct = nullptr;
-    Instagram::userData *lloudStruct = nullptr;
-    Instagram::userData *lfamilyStruct = nullptr;
-    
     Instagram::userData *currentUser = nullptr;
     int instagram_currentSelectedProfileIndex = 0;
 };

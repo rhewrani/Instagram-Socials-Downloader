@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <qdebug.h>
 
+// Constructor: Sets up the main UI, manager, window instances, media player, and models.
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -22,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_videoWidget = new QVideoWidget(this);
     m_player = new QMediaPlayer(this);
     m_audioOutput = new QAudioOutput(this);
-
+    
     clipboard = QGuiApplication::clipboard();
 
     Logger::instance()->setParentWidget(this, 0);
@@ -31,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 }
 
+// Fills the profile information section in the UI (username, bio, followers, etc.).
 void MainWindow::updateProfileInfoUI(Instagram::userData* user, bool loadStory)
 {
     if (user) {
@@ -59,6 +61,7 @@ void MainWindow::updateProfileInfoUI(Instagram::userData* user, bool loadStory)
 }
 
 
+// Updates the feed list view, either by reloading the entire feed or appending new posts.
 void MainWindow::updateProfileFeedUI(Instagram::userData *user)
 {
     if (!user->allowUpdateProfileFeedUI) return;
@@ -95,6 +98,7 @@ void MainWindow::updateProfileFeedUI(Instagram::userData *user)
     initialLoad();
 }
 
+// Handles the UI state when no profiles are available to display.
 void MainWindow::loadEmpty() {
 
     ui->INST_LBL_LOAD->setVisible(false);
@@ -110,6 +114,7 @@ void MainWindow::loadEmpty() {
     initialLoad();
 }
 
+// Resets profile labels and icons to their default state.
 void MainWindow::resetProfileInfoUI() {
     
     ui->INST_USER_PFP->clear();
@@ -123,6 +128,7 @@ void MainWindow::resetProfileInfoUI() {
 
 }
 
+// Populates the profile selection combobox and ensures the correct index is selected.
 void MainWindow::setProfileCombobox(const QList<Instagram::userData> &profiles, bool triggerIndexChanged, int selectedIndex)
 {
     ui->INST_CMBX_USER->blockSignals(true);
@@ -165,6 +171,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Event filter to handle window dragging for the custom frameless title bar.
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == titleBar) {
@@ -188,6 +195,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return QMainWindow::eventFilter(obj, event);
 }
 
+// Main initialization function: sets up UI components and connects core signals/slots.
 void MainWindow::Init()
 {
     InitUI();
@@ -220,6 +228,7 @@ void MainWindow::Init()
 
 }
 
+// Sets up the custom frameless title bar with minimize and close buttons.
 void MainWindow::InitTitleBar()
 {
     setWindowFlags(Qt::FramelessWindowHint);
@@ -275,6 +284,7 @@ void MainWindow::InitTitleBar()
     setCentralWidget(central);
 }
 
+// General UI initialization: calls title bar setup and creates clickable profile labels.
 void MainWindow::InitUI()
 {
 
@@ -290,7 +300,7 @@ void MainWindow::InitUI()
                                                    "background-color: lightgray; \n"
                                                    "background-position: center;\n"
                                                    "background-repeat: no-repeat;\n"
-                                                   "background-image: url(:/images/lisa.jpg);\n"
+                                                   "background-image: url(:/images/ISD.jpg);\n"
                                                    ""));
     INST_MDCT_PFP->setScaledContents(true);
 
@@ -304,7 +314,7 @@ void MainWindow::InitUI()
                                                    "background-color: lightgray; \n"
                                                    "background-position: center;\n"
                                                    "background-repeat: no-repeat;\n"
-                                                   "background-image: url(:/images/lisa.jpg);\n"
+                                                   "background-image: url(:/images/ISD.jpg);\n"
                                                    ""));
     INST_MDIA_PFP->setScaledContents(true);
 
@@ -353,6 +363,7 @@ void MainWindow::InitUI()
     InitLang();
 }
 
+// Initializes localized strings for all UI elements (labels, buttons, menus).
 void MainWindow::InitLang()
 {
     fitTextToLabel(ui->INST_USER_FOL, _("USER_FOL"));
@@ -376,6 +387,7 @@ void MainWindow::InitLang()
     ui->MENU_OPEN_INFO->setText(_("MBR_MENU_INFO"));
 }
 
+// Fetches and sets a rounded profile picture from a URL into the target label.
 void MainWindow::setPfpImageFromURL(QLabel *target, QString &url, QString &id, int dimX, int dimY)
 {
 
@@ -405,11 +417,13 @@ void MainWindow::setPfpImageFromURL(QLabel *target, QString &url, QString &id, i
 
 }
 
+// Shows the story indicator button if a user has active stories.
 void MainWindow::toggleStoryButton(const QString &username)
 {
    ui->INST_USER_STRY->setVisible(true);
 }
 
+// Triggers asynchronous image downloads for each item in the feed model.
 void MainWindow::downloadImagesForFeed(const QList<Instagram::contentNode> &posts, int startRow)
 {
     for (int i = 0; i < posts.size(); ++i) {
@@ -425,6 +439,7 @@ void MainWindow::downloadImagesForFeed(const QList<Instagram::contentNode> &post
     }
 }
 
+// Triggers asynchronous image downloads for child items (e.g., sidecar posts).
 void MainWindow::downloadChildMediaImages(const QMap<int, Instagram::contentChild> &children)
 {
     auto childModel = qobject_cast<ChildMediaModel*>(ui->INST_LV_POST->model());
@@ -444,6 +459,7 @@ void MainWindow::downloadChildMediaImages(const QMap<int, Instagram::contentChil
     }
 }
 
+// Prepares and saves media files to the local disk, handling both images and videos.
 void MainWindow::queueSaveMedia(const QMap<int, Instagram::contentChild> &map)
 {
 
@@ -513,6 +529,7 @@ void MainWindow::queueSaveMedia(const QMap<int, Instagram::contentChild> &map)
     }
 }
 
+// Opens a dialog to view the full-size profile picture.
 void MainWindow::openPfpViewer()
 {
     if (!currentSelectedNode) {
@@ -535,6 +552,7 @@ void MainWindow::openPfpViewer()
 }
 
 
+// Updates the UI to display the content of a specific post or story node.
 void MainWindow::displayNodeContent(Instagram::contentNode *node)
 {
     Instagram::userData* user = manager->instagram_getCurrentSelectedUser();
@@ -723,6 +741,7 @@ void MainWindow::displayNodeContent(Instagram::contentNode *node)
 
 }
 
+// Re-generates the copy-paste text for the current selection after a settings change.
 void MainWindow::updateGeneratedText()
 {
     if (!currentSelectedNode) return;
@@ -732,6 +751,7 @@ void MainWindow::updateGeneratedText()
     manager->generateCopyPasteText(targetTemplate, ui->INST_LN_RES, currentParams);
 }
 
+// Clears the preview widget and stops video playback.
 void MainWindow::resetPreviewWidget()
 {
     ui->INST_LBL_MDST->setText(_("NO_MDIA"));
@@ -742,6 +762,7 @@ void MainWindow::resetPreviewWidget()
     m_player->stop();
 }
 
+// Handles the initial application load, showing the info dialog if it's the first run.
 void MainWindow::initialLoad()
 {
 
@@ -759,6 +780,7 @@ void MainWindow::initialLoad()
     }
 }
 
+// Displays a transient notification label (toast) at the top of the window.
 void MainWindow::showToast(const QString &message, ToastType type, int durationMs, bool isVideo)
 {
     if (!m_toastLabel) {
@@ -848,6 +870,7 @@ void MainWindow::showToast(const QString &message, ToastType type, int durationM
     m_toastTimer->start(durationMs);
 }
 
+// Hides the current toast notification.
 void MainWindow::hideToast()
 {
     if (m_toastLabel) {
@@ -856,6 +879,7 @@ void MainWindow::hideToast()
     }
 }
 
+// Slot: Handles profile selection changes. Triggers a data fetch or UI refresh.
 void MainWindow::on_INST_CMBX_USER_currentIndexChanged(int index)
 {
     if (index != manager->instagram_getCurrentSelectedUserIndex()) {
@@ -893,6 +917,7 @@ void MainWindow::on_INST_CMBX_USER_currentIndexChanged(int index)
 }
 
 
+// Slot: Handles clicks on the feed list. Displays the selected post's content.
 void MainWindow::on_INST_LV_FEED_clicked(const QModelIndex &index)
 {
     if (currentSelectedNode == nullptr || manager->instagram_getCurrentSelectedUser()->feed[index.row()].shortcode != currentSelectedNode->shortcode) {
@@ -905,6 +930,7 @@ void MainWindow::on_INST_LV_FEED_clicked(const QModelIndex &index)
 }
 
 
+// Slot: Handles the "Next Page" button click for feed pagination.
 void MainWindow::on_INST_BTN_NP_clicked()
 {
     overlay = new BlockingOverlay(this, "");
@@ -919,6 +945,7 @@ void MainWindow::on_INST_BTN_NP_clicked()
 }
 
 
+// Slot: Reloads the current user's profile info and feed, clearing caches.
 void MainWindow::on_INST_BTN_RFSH_clicked()
 {
     if ((QDateTime::currentSecsSinceEpoch() - manager->lastApiCall) < 30) {
@@ -935,6 +962,7 @@ void MainWindow::on_INST_BTN_RFSH_clicked()
     manager->lastApiCall = QDateTime::currentSecsSinceEpoch();
 }
 
+// Slot: Toggles video playback (play/pause).
 void MainWindow::on_INST_BTN_PLBK_clicked()
 {
     if (m_player->playbackState() == QMediaPlayer::PlayingState) {
@@ -945,6 +973,7 @@ void MainWindow::on_INST_BTN_PLBK_clicked()
 }
 
 
+// Slot: Processes the download link/shortcode entered in the input field.
 void MainWindow::on_INST_BTN_DOWN_clicked()
 {
     if (ui->INST_LN_LINK->text().isEmpty()) return;
@@ -983,6 +1012,7 @@ void MainWindow::on_INST_BTN_DOWN_clicked()
 }
 
 
+// Slot: Opens a large-scale media viewer when a child item (carousel) is double-clicked.
 void MainWindow::on_INST_LV_POST_doubleClicked(const QModelIndex &index)
 {
     if (!currentSelectedNode || index.row() >= currentSelectedNode->children.size()) {
@@ -1000,6 +1030,7 @@ void MainWindow::on_INST_LV_POST_doubleClicked(const QModelIndex &index)
 }
 
 
+// Slot: Toggles audio mute state.
 void MainWindow::on_INST_BTN_SOUN_clicked()
 {
     if (m_player->audioOutput()->isMuted()) {
@@ -1010,17 +1041,20 @@ void MainWindow::on_INST_BTN_SOUN_clicked()
 }
 
 
+// Slot: Selects all items in the post children list.
 void MainWindow::on_INST_BTN_SELC_clicked()
 {
     ui->INST_LV_POST->selectAll();
 }
 
 
+// Slot: Deselects all items in the post children list.
 void MainWindow::on_INST_BTN_DSLC_clicked()
 {
     ui->INST_LV_POST->clearSelection();
 }
 
+// Slot: Handles the "Magic" button click – saves media and optionally copies caption.
 void MainWindow::on_BTN_MGC_clicked()
 {
 
@@ -1033,6 +1067,7 @@ void MainWindow::on_BTN_MGC_clicked()
 }
 
 
+// Slot: Saves all currently selected media items from a carousel or story.
 void MainWindow::on_BTN_SAVE_clicked()
 {
 
@@ -1063,6 +1098,7 @@ void MainWindow::on_BTN_SAVE_clicked()
 }
 
 
+// Slot: Opens the settings window.
 void MainWindow::on_MENU_OPEN_SETT_triggered()
 {
     if (settingswindow->isVisible()) {
@@ -1074,6 +1110,7 @@ void MainWindow::on_MENU_OPEN_SETT_triggered()
 }
 
 
+// Slot: Displays the stories of the current user.
 void MainWindow::on_INST_USER_STRY_clicked()
 {
     ui->INST_LBL_MDST->setText(_("LOAD"));
@@ -1084,6 +1121,7 @@ void MainWindow::on_INST_USER_STRY_clicked()
     displayNodeContent(&manager->m_storyCache[manager->instagram_getCurrentSelectedUser()->username]);
 }
 
+// Slot: Opens the information/about dialog.
 void MainWindow::on_MENU_OPEN_INFO_triggered()
 {
     if (infodialog->isVisible()) {
@@ -1094,6 +1132,7 @@ void MainWindow::on_MENU_OPEN_INFO_triggered()
     }
 }
 
+// Slot: Opens the profile management window.
 void MainWindow::on_MENU_OPEN_PRFL_triggered()
 {
     if (profilewindow->isVisible()) {

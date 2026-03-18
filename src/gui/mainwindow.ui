@@ -29,11 +29,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>LISA Socials Tool</string>
+   <string>Instagram Socials Downloader</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../resources/resources.qrc">
-    <normaloff>:/images/lisa.jpg</normaloff>:/images/lisa.jpg</iconset>
+    <normaloff>:/images/ISD.jpg</normaloff>:/images/ISD.jpg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
@@ -443,7 +443,7 @@ border: 2px solid #0c0c0c;
 background-color: lightgray; 
 background-position: center;
 background-repeat: no-repeat;
-background-image: url(:/images/lisa.jpg);
+background-image: url(:/images/ISD.jpg);
 </string>
       </property>
       <property name="text">
@@ -546,7 +546,7 @@ background-image: url(:/images/lisa.jpg);
        </font>
       </property>
       <property name="text">
-       <string>LISA</string>
+       <string>J</string>
       </property>
      </widget>
      <widget class="QLabel" name="INST_USER_USER">
@@ -564,7 +564,7 @@ background-image: url(:/images/lisa.jpg);
        </font>
       </property>
       <property name="text">
-       <string>lalalalisa_m</string>
+       <string>jennierubyjane</string>
       </property>
      </widget>
      <widget class="QLabel" name="INST_USER_BIO">
@@ -782,7 +782,7 @@ QPushButton:pressed {
         </font>
        </property>
        <property name="text">
-        <string>lalalalisa_m</string>
+        <string>jennierubyjane</string>
        </property>
       </widget>
       <widget class="QLabel" name="INST_MDCT_VERI">
@@ -1078,7 +1078,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
         </font>
        </property>
        <property name="text">
-        <string>lalalalisa_m</string>
+        <string>jennierubyjane</string>
        </property>
       </widget>
       <widget class="QLabel" name="INST_MDIA_VERI">

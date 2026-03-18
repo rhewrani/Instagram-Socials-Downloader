@@ -3,7 +3,6 @@
         <file>images/checkmark.png</file>
         <file>images/chevron-down.png</file>
         <file>images/chevron-up.png</file>
-        <file>images/lisa.jpg</file>
         <file>images/play.png</file>
         <file>images/pause_white.png</file>
         <file>images/play_white.png</file>
@@ -25,5 +24,6 @@
         <file>images/user-minus_white.png</file>
         <file>images/user-pen_white.png</file>
         <file>images/user-plus_white.png</file>
+        <file>images/ISD.jpg</file>
     </qresource>
 </RCC>

@@ -142,7 +142,7 @@ QTextEdit, QLineEdit {
      </rect>
     </property>
     <property name="placeholderText">
-     <string>Username (without @), e.g. lalalalisa_m</string>
+     <string>Username (without @), e.g. jennierubyjane</string>
     </property>
    </widget>
    <widget class="QPushButton" name="BTN_CHECK_USER">
@@ -257,7 +257,7 @@ border: 2px solid #0c0c0c;
 background-color: lightgray; 
 background-position: center;
 background-repeat: no-repeat;
-background-image: url(:/images/lisa.jpg);
+background-image: url(:/images/ISD.jpg);
 </string>
     </property>
     <property name="text">

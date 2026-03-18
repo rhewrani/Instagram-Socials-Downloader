@@ -10,6 +10,12 @@ namespace Ui {
 class Settingswindow;
 }
 
+/**
+ * @brief The Settingswindow class provides a UI to configure application preferences.
+ * 
+ * Includes settings for language, download directory, session ID, and custom 
+ * caption presets.
+ */
 class Settingswindow : public QDialog
 {
     Q_OBJECT
@@ -20,12 +26,14 @@ public:
 
     void closeEvent(QCloseEvent *event) override;
 
+    //  @brief Shows the settings window and populates it with current values.
     void sw_show();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 signals:
+    //  @brief Emitted when UI-affecting settings (like language) are changed.
     void signal_updateTextMainWindow();
 
 private slots:

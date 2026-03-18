@@ -144,9 +144,10 @@ bool ProfileChecker::pc_checkUserExists(const QString &id) {
     return false;
 }
 
+// Handles the 'Check' button click to look up a username.
 void ProfileChecker::on_BTN_CHECK_USER_clicked()
 {
-    const QString username = ui->LN_INPT_USER->text();
+    const QString username = ui->LN_INPT_USER->text().trimmed();
     if (username.isEmpty()) return;
 
     ui->BTN_SAVE->setHidden(true);
@@ -155,6 +156,7 @@ void ProfileChecker::on_BTN_CHECK_USER_clicked()
 
 }
 
+// Processes the result of a profile lookup from the Instagram API.
 void ProfileChecker::on_receivedProfileInfo(Instagram::userData *user)
 {
     ui->LBL_LOAD->setVisible(false);    
