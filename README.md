@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-   A powerful, cross-platform Instagram media downloader built with C++ and the Qt Framework. This tool allows users to browse Instagram profiles, view feeds, and download high-quality images and videos with ease.
+   A powerful Instagram media downloader built with C++ and the Qt Framework. This tool allows users to browse Instagram profiles, view feeds, and download high-quality images and videos with ease.
 </p>
 
 ## Features
@@ -72,6 +72,22 @@
 6.  Manually copy the `settings.json file` and `profiles.json` from the `src/templates` directory in the source code to the directory where the compiled `ISD.exe` executable is located (typically `build/` or `build/Release/`). This file contains the default settings needed by the application.
 
 > **Note:** The application is currently **Windows-only** for now due to installer and deployment constraints. macOS/Linux support would require significant porting effort.
+
+---
+
+## 🔑 How to get your Session ID (Required for Stories)
+
+To download Stories or private content, the application requires an active Instagram Session ID. Here is how to find yours:
+
+1.  **Log in** to [Instagram.com](https://www.instagram.com) in your desktop web browser (Chrome, Edge, or Firefox).
+2.  Press `F12` (or Right-click > **Inspect**) to open the Developer Tools.
+3.  Navigate to the **Application** tab (Chrome/Edge) or **Storage** tab (Firefox).
+4.  In the left sidebar, expand **Cookies** and select `https://www.instagram.com`.
+5.  Find the row named `sessionid` in the list.
+6.  Double-click the **Value** and copy the long string of text.
+7.  Paste this value into the **Settings** menu within **Instagram Socials Downloader**.
+
+> ⚠️ **Security Note:** Your Session ID is essentially a temporary password. The application stores this locally on your machine to authenticate requests to the Instagram API.
 
 ---
 
